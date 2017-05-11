@@ -1,23 +1,25 @@
-#include "Empresa.h"
+#include "Company.h"
+#include "Line.h"
+#include "Driver.h"
 
 
-Empresa::Empresa(string nome, string fichCondutores, string fichLinhas){
-  
+Empresa::Company(string name, string driversFile, string linesFile) {
+	this->name = name;
 }
 
 ////////////////////////////////
-// metodos get
+// get methods
 ///////////////////////////////
-string Empresa::getNome() const{
-  return nome;
+string Company::getName() const{
+  return name;
 }
 
 //////////////////////////////
-// metodos set
+// set methods
 /////////////////////////////
 
 ////////////////////////////
-// outros metodos
+// other methods
 ///////////////////////////
-void Empresa::distribuiServico(){
+void Company::distribuiServico(){
 }

@@ -15,8 +15,8 @@ class Shift{
   unsigned int endTime;   
 
  public:
-  Shift(unsigned int busLineId, unsigned int driverId, unsigned int busNumber, unsigned int startTime, unsigned int endTime);
-  // get methdos
+  Shift(unsigned int busLineId, unsigned int driverId, unsigned int busNumber, unsigned int startTime, unsigned int endTime); //constructor
+  // get methods
   unsigned int getBusLineId() const;
   unsigned int getDriverId() const;
   unsigned int getBusOrderNumber() const; // order of the bus within the bus line
@@ -24,11 +24,11 @@ class Shift{
   unsigned int getEndTime() const;
 
   //  set methods
-  unsigned int setBusLineId(unsigned int);
-  unsigned int setDriverId(unsigned int);
-  unsigned int setBusOrderNumber(unsigned int);
-  unsigned int setStartTime(unsigned int);
-  unsigned int setEndTime(unsigned int);
+  void setBusLineId(unsigned int busLineId);
+  void setDriverId(unsigned int driverId);
+  void setBusOrderNumber(unsigned int busOrderNumber);
+  void setStartTime(unsigned int startTime);
+  void setEndTime(unsigned int endTime);
 
   // other methods
 };

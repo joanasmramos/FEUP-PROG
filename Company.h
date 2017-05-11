@@ -5,22 +5,22 @@
 #include <vector>
 #include <map>
 
-#include "Linha.h"
-#include "Condutor.h"
+#include "Line.h"
+#include "Driver.h"
 
 
 using namespace std;
 
-class Empresa{
+class Company{
  private:
-  string nome;
-  vector<Condutor> condutores;
-  vector<Linha> linhas;
+  string name;
+  vector<Driver> drivers;
+  vector<Line> lines;
  public:
-  Empresa(string nome, string fichCondutores, string fichLinhas)
-  // metodos get
-  string getNome() const;
-  // metodos set
-  // outros metodos
+  Company(string name, string driversFile, string linesFile)
+  // get methods
+  string getName() const;
+  // set methods
+  // other methods
   void distribuiServico(); // funcao que implementa a afectacao de servico
 };

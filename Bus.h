@@ -15,15 +15,15 @@ class Bus{
   unsigned int lineId;
   vector<Shift> schedule;
  public:
-  Bus(unsigned int id, unsigned int driver, unsigned int line);
+  Bus(unsigned int order, unsigned int driver, unsigned int line); //constructor
   // get methods
   unsigned int getBusOrderInLine() const;
   unsigned int getDriverId() const;
   unsigned int getLineId() const;
   vector<Shift> getSchedule() const;
   // set methods
-    unsigned int setDriverId() const;
-    unsigned int setLineId() const;
+   void setDriverId(unsigned int driver) const;
+   void setLineId(unsigned int line) const;
   // other methods
 
 };
