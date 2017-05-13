@@ -8,9 +8,9 @@ Empresa::Company(string name, string driversFile, string linesFile) {
 
 	//Drivers file
 
-		string name_f, line;
+		string name_f, lined;
 		ifstream drivers_f;
-		vector <driver> Drivers;
+		vector <Driver> Drivers;
 
 		cout << "Introduza o nome do ficheiro de condutores: ";
 		cin >> name_f;
@@ -26,8 +26,8 @@ Empresa::Company(string name, string driversFile, string linesFile) {
 
 		while (!drivers_f.eof())
 		{
-			getline(drivers_f, line);
-			Driver driver1(line);
+			getline(drivers_f, lined);
+			Driver driver1(lined);
 			Drivers.push_back(driver1);
 		}
 
@@ -35,48 +35,27 @@ Empresa::Company(string name, string driversFile, string linesFile) {
 
 
 		//Lines Files
-		vector <line> Lines;
-		string nome, line;
-		ifstream f_linhas;
+		string name_f, linel;
+		ifstream lines_f;
+		vector <Line> Lines;
 
 		cout << "Introduza o nome do ficheiro de linhas: ";
-		cin >> nome_f;
-		f_linhas.open(nome_f);
+		cin >> name_f;
+		lines_f.open(name_f);
 
-		while (f_linhas.fail())
+		while (lines_f.fail())
 		{
 			cout << "ERRO: nao abriu o ficheiro de linhas" << endl;
 			cout << "Introduza de novo o ficheiro de linhas: ";
-			cin >> nome_f;
-			f_linhas.open(nome_f);
+			cin >> name_f;
+			lines_f.open(name_f);
 		}
 
-		while (!f_linhas.eof())
+		while (!lines_f.eof())
 		{
-			Linha l1;
-
-			getline(f_linhas, line);
-
-			l1.ID = stoi(line.substr(0, line.find(';')));
-			line = line.substr(line.find(';') + 2);
-			l1.Freq = stoi(line.substr(0, line.find(';')));
-			line = line.substr(line.find(';') + 2);
-
-			while (line.find(',') < line.find(';'))
-			{
-				l1.Paragens.push_back(line.substr(0, line.find(',')));
-				line = line.substr(line.find(',') + 2);
-			}
-			l1.Paragens.push_back(line.substr(0, line.find(';')));
-			line = line.substr(line.find(';') + 2);
-
-			for (unsigned int i = 1; i < l1.Paragens.size(); i++)
-			{
-				l1.tempoEntreViagem.push_back(stoi(line.substr(0, line.find(','))));
-				line = line.substr(line.find(',') + 2);
-			}
-
-			Linhas.push_back(l1);
+			getline(lines_f, linel);
+			Line Line1(linel);
+			Lines.push_back(linel);
 		}
 
 		f_linhas.close();

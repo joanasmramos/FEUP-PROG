@@ -1,10 +1,26 @@
 #include "Line.h"
 
 
-Line::Line(string textLIne){
+Line::Line(string textLine){
 
-  // INITIALISATION CODE GOES IN HERE
- 
+	id_line = stoi(textLine.substr(0, textLine.find(';')));
+	textLine = textLine.substr(textLine.find(';') + 2);
+	freq = stoi(textLine.substr(0, textLine.find(';')));
+	textLine = textLine.substr(textLine.find(';') + 2);
+
+	while (textLine.find(',') < textLine.find(';'))
+	{
+		busStopList.push_back(textLine.substr(0, textLine.find(',')));
+		textLine = textLine.substr(textLine.find(',') + 2);
+	}
+	busStopList.push_back(textLine.substr(0, textLine.find(';')));
+	textLine = textLine.substr(textLine.find(';') + 2);
+
+	for (unsigned int i = 1; i < busStopList.size(); i++)
+	{
+		timesList.push_back(stoi(textLine.substr(0, textLine.find(','))));
+		textLine = textLine.substr(textLine.find(',') + 2);
+	}
 }
 
 ////////////////
