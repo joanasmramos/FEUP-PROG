@@ -1,9 +1,6 @@
-/*LABORATÓRIO DE SISTEMAS OPERATIVOS - PARTE 1 DO PROJETO DE PROG 2016/2017 */
+/*LABORATÓRIO DE SISTEMAS OPERATIVOS - PARTE 2 DO PROJETO DE PROG 2016/2017 */
 
 /*   P R O J E T O   1   */
-
-// LINHAS ->  ID, FREQUENCIA, LISTA DE PARAGENS, LISTA TEMPOS VIAGEM
-// MOTORISTAS -> NOME, ID_MOTORISTA, N_HORAS_TURNO, N_HORAS_SEMANAIS, N_HORAS_DESCANSO
 
 #include <iostream> // I/O reasoning
 #include <vector> //For use of vectors
@@ -11,6 +8,13 @@
 #include <fstream> //Manipulation of files
 #include <limits> //Invalid inputs
 #include <iomanip> //setfill, setw, ...
+
+//ADTs and their matching headers
+#include "Bus.h" 
+#include "Shift.h"
+#include "Company.h"
+#include "Driver.h"
+#include "Line.h"
 
 using namespace std;
 
@@ -37,8 +41,6 @@ void VerCondutoresExistentes();
 void LinhasParagens();
 void CalcularTempoParagens();
 void streamsLinhasECondutores();
-void abertura_condutores();
-void abertura_linhas();
 void SaveFicheiroLinhas();
 void SaveFicheiroCondutores();
 int RetIDCondutores(int id);
@@ -68,90 +70,7 @@ vector <Linha> Linhas;
 vector <Condutor> Condutores;
 
 //FICHEIROS
-void abertura_condutores()
-{
-	string nome_f, line;
-	ifstream f_condutores;
-	Condutor c1;
 
-	cout << "Introduza o nome do ficheiro de condutores: ";
-	cin >> nome_f;
-	f_condutores.open(nome_f);
-
-	while (f_condutores.fail())
-	{
-		cout << "ERRO: nao abriu o ficheiro de condutores" << endl;
-		cout << "Introduza de novo o ficheiro de condutores: ";
-		cin >> nome_f;
-		f_condutores.open(nome_f);
-	}
-
-	while (!f_condutores.eof())
-	{
-		getline(f_condutores, line);
-		c1.ID_Motorista = stoi(line.substr(0, line.find(';')));
-		line = line.substr(line.find(';') + 2);
-		c1.Nome = line.substr(0, line.find(';') - 1);
-		line = line.substr(line.find(';') + 2);
-		c1.NHoras_Turno = stoi(line.substr(0, line.find(';')));
-		line = line.substr(line.find(';') + 2);
-		c1.NHoras_Semanais = stoi(line.substr(0, line.find(';')));
-		line = line.substr(line.find(';') + 2);
-		c1.NHoras_Descanso = stoi(line);
-
-		Condutores.push_back(c1);
-	}
-
-	f_condutores.close();
-}
-void abertura_linhas()
-{
-	Linha l1;
-	string nome_f, line;
-	ifstream f_linhas;
-
-	cout << "Introduza o nome do ficheiro de linhas: ";
-	cin >> nome_f;
-	f_linhas.open(nome_f);
-
-	while (f_linhas.fail())
-	{
-		cout << "ERRO: nao abriu o ficheiro de linhas" << endl;
-		cout << "Introduza de novo o ficheiro de linhas: ";
-		cin >> nome_f;
-		f_linhas.open(nome_f);
-	}
-
-	while (!f_linhas.eof())
-	{
-		Linha l1;
-
-		getline(f_linhas, line);
-
-		l1.ID = stoi(line.substr(0, line.find(';')));
-		line = line.substr(line.find(';') + 2);
-		l1.Freq = stoi(line.substr(0, line.find(';')));
-		line = line.substr(line.find(';') + 2);
-
-		while (line.find(',') < line.find(';'))
-		{
-			l1.Paragens.push_back(line.substr(0, line.find(',')));
-			line = line.substr(line.find(',') + 2);
-		}
-		l1.Paragens.push_back(line.substr(0, line.find(';')));
-		line = line.substr(line.find(';') + 2);
-
-		for (unsigned int i = 1; i < l1.Paragens.size(); i++)
-		{
-			l1.tempoEntreViagem.push_back(stoi(line.substr(0, line.find(','))));
-			line = line.substr(line.find(',') + 2);
-		}
-
-		Linhas.push_back(l1);
-	}
-
-	f_linhas.close();
-}
 void SaveFicheiroCondutores() {
 	string FicheiroCondutor;
 	"========================================================================================================\n";
@@ -227,9 +146,6 @@ void streamsLinhasECondutores() {
 	cout << "  \\__ | _>|     |  _|   |   |   |   | | | |_|   |   /" << endl;
 	cout << "  <___|___|_|_|_|_| |_\\_|_|_|_\\_|_\\_`___|___|_|_|_\\_\\ " << endl;
 	cout << "========================================================================================================\n\n";
-
-	abertura_condutores();
-	abertura_linhas();
 }
 
 //FUNÇÕES DE TRATAMENTO DE HORÁRIOS
@@ -1090,26 +1006,23 @@ void InfHorario() {
 }
 
 //MENU
-//Função para informação de Linha e Condutores
-void Informacoes() {
+//Função para geração de Linhas
+void GESTLINHA() {
 	int options;
-	options = -1;
+	options = -1;;
 	cout << "========================================================================================================";
-	cout << "\nINFORMACOES\n";
+	cout << "\nGESTAO DE LINHAS \n";
 	cout << "Insira a sua opcao (1,2,...)\n";
 	cout << "1) Horarios\n";
 	cout << "2) Linhas\n";
 	cout << "3) Percursos\n";
-	cout << "4) Condutores\n";
-	cout << "5) Linhas em Paragens\n";
-	cout << "6) Calcular tempo entre Paragens\n";
+	cout << "4) Linhas em Paragens\n";
+	cout << "5) Calcular tempo entre Paragens\n";
 	cout << "0) Menu Principal\n";
 	cout << "========================================================================================================\n\n";
 	while (!cin.fail()) {
 		cin >> options;
-
 		switch (options) {
-
 		case 0:
 			MenuPrincipal();
 			break;
@@ -1127,52 +1040,12 @@ void Informacoes() {
 			break;
 
 		case 4:
-			VerCondutoresExistentes();
-			break;
-
-		case 5:
 			LinhasParagens();
 			break;
 			//in case of wrong input
 
-		case 6:
+		case 5:
 			CalcularTempoParagens();
-			break;
-
-		default:
-			InvalidInputMenu();
-			break;
-		}
-	}
-}
-
-//MENU
-//Função para geração de Linhas
-void GESTLINHA() {
-	int options;
-	options = -1;;
-	cout << "========================================================================================================";
-	cout << "\nGESTAO DE LINHAS \n";
-	cout << "Insira a sua opcao (1,2,...)\n";
-	cout << "1) Adicionar Linhas\n";
-	cout << "2) Remover Linhas\n";
-	cout << "3) Alterar Linhas\n";
-	cout << "0) Menu Principal\n";
-	cout << "========================================================================================================\n\n";
-	while (!cin.fail()) {
-		cin >> options;
-		switch (options) {
-		case 0:
-			MenuPrincipal();
-			break;
-		case 1:
-			AdicionarLinha();
-			break;
-		case 2:
-			RemoverLinha();
-			break;
-		case 3:
-			AlterarLinhaMenu();
 			break;
 
 			//in case of wrong input
@@ -1194,6 +1067,7 @@ void GESTCOND() {
 	cout << "1) Adicionar Condutores \n";
 	cout << "2) Remover Condutores\n";
 	cout << "3) Alterar Condutores\n";
+	cout << "4) Ver Condutores existentes\n";
 	cout << "0) Menu Principal\n";
 	cout << "========================================================================================================\n\n";
 	//cenas cenas cena
@@ -1209,6 +1083,9 @@ void GESTCOND() {
 			RemoverCondutor();
 		case 3:
 			AlterarCondutorMenu();
+		case 4:
+			VerCondutoresExistentes();
+			break;
 
 			//in case of wrong input
 		default:
@@ -1259,9 +1136,9 @@ void MenuPrincipal() {
 	cout << " Por favor escolha um numero como opcao. \n";
 	cout << " 1) Gestao de Linhas.\n";
 	cout << " 2) Gestao de Condutores.                                __________________\n";
-	cout << " 3) Informacoes.                                        |            TM  D \\\n";
-	cout << " 4) Gravar Ficheiro                                     |SEMPRARROLAR||    |\n";
-	cout << " 0) Terminar programa.                             ooo0O|_ (o) ______|| (o)/\n";
+	cout << " 3) Gravar Ficheiro                                     |            TM  D \\\n";
+	cout << " 0) Terminar programa.                                  |SEMPRARROLAR||    |\n";
+	cout << "                                                   ooo0O|_ (o) ______|| (o)/\n";
 	cout << "========================================================================================================\n\n";
 
 
