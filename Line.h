@@ -31,5 +31,5 @@ class Line{
   void setTimings(vector<int> timings);
 
   // other methods
-
+  unsigned int nrBuses() const; // computes de number of buses needed for one line
 };

@@ -47,11 +47,6 @@ unsigned int Line::getFreq() const {
 // set methods
 ////////////////
 
-unsigned int id_l;
-vector<string> busStopList;
-vector<int> timesList;
-unsigned int freq;
-
 void Line::setID(unsigned int id) {
 	id_line = id;
 }
@@ -66,4 +61,22 @@ void Line::setBusStops(vector<string> paragens) {
 
 void Line::setTimings(vector<int> tempos) {
 	timesList = tempos;
+}
+
+////////////////
+// other methods
+////////////////
+
+unsigned int Line::nrBuses() const {
+	int totalTime = 0; // time that the bus takes to reach its destination and come back
+	int nrbuses = 0; 
+	for (unsigned int i = 0; i < timesList.size(); i++)
+	{
+		totalTime = totalTime + timeslist.at(i);
+	}
+	//rigth now totalTime contains only the time to reach the destination, so we have to double it to include the time it takes to come back
+	totalTime = 2 * totalTime;
+	nrbuses = (int)((double)totalTime / freq + 1.0);
+
+	return nrbuses;
 }

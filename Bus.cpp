@@ -1,7 +1,7 @@
 #include "Bus.h"
 
 
-Bus::  Bus(unsigned int order, unsigned int driver, unsigned int line){
+Bus::Bus(unsigned int order, unsigned int driver, unsigned int line){
 	orderInLine = order;
 	driverId = driver;
 	lineId = line;
