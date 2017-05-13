@@ -10,16 +10,26 @@ using namespace std;
 
 class Line{
  private:
-  unsigned int id;
+  unsigned int id_line;
   vector<string> busStopList;
   vector<int> timesList;
+  unsigned int freq;
+
  public:
   Line(string textLine);
-  // metodos get
+
+  // get methods
   unsigned int getId() const;
   vector<string> getBusStops() const;
   vector<int> getTimings() const;
+  unsigned int getFreq() const;
+
   // set methods
+  void setID(unsigned int id);
+  void setFreq(unsigned int freq);
+  void setBusStops(vector<string> stops);
+  void setTimings(vector<int> timings);
+
   // other methods
 
 };
