@@ -18,7 +18,7 @@ class Driver{
   unsigned int minRestTime;     // minimum number of rest hours between shifts
   vector<Shift> shifts;         // assigned shifts
  public:
-  Driver(string textLine);
+  Driver(string line);
   // get methods
   unsigned int getId() const;
   string getName() const;
@@ -26,7 +26,14 @@ class Driver{
   unsigned int getMaxWeekWorkingTime() const;
   unsigned int getMinRestTime() const;
   vector<Shift> getShifts() const;
+  // set methods
+  void setId(unsigned int id);
+  void setName(string name);
+  void setMaxHours(unsigned int maxHours);
+  void setMaxWeekWorkingTime(unsigned int maxWeekWorkingTime);
+  void setMinRestTime(unsigned int minRestTime);
 
-  // outher methods
+
+  // other methods
 
 };
