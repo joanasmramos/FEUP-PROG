@@ -1,9 +1,10 @@
 #include "Company.h"
 #include "Line.h"
 #include "Driver.h"
+#include <fstream>
 
 
-Empresa::Company(string name, string driversFile, string linesFile) {
+Company::Company(string name, string driversFile, string linesFile) {
 	this->name = name;
 
 	//Drivers file
@@ -54,11 +55,11 @@ Empresa::Company(string name, string driversFile, string linesFile) {
 		while (!lines_f.eof())
 		{
 			getline(lines_f, linel);
-			Line Line1(linel);
-			Lines.push_back(linel);
+			Line line1(linel);
+			Lines.push_back(line1);
 		}
 
-		f_linhas.close();
+		lines_f.close();
 		
 }
 

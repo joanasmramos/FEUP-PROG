@@ -17,7 +17,7 @@ class Company{
   vector<Driver> drivers;
   vector<Line> lines;
  public:
-  Company(string name, string driversFile, string linesFile)
+	 Company(string name, string driversFile, string linesFile);
   // get methods
   string getName() const;
   // set methods
