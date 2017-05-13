@@ -127,7 +127,7 @@ void abertura_linhas()
 		Linha l1;
 
 		getline(f_linhas, line);
-
+	
 		l1.ID = stoi(line.substr(0, line.find(';')));
 		line = line.substr(line.find(';') + 2);
 		l1.Freq = stoi(line.substr(0, line.find(';')));
