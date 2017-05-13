@@ -26,6 +26,10 @@ vector<Shift> Bus::getSchedule() const{
   return schedule;
 }
 
+unsigned int orderInLine;
+unsigned int driverId;
+unsigned int lineId;
+vector<Shift> schedule;
 //////////////////////////////
 // set methods
 /////////////////////////////
