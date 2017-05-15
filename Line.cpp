@@ -22,6 +22,7 @@ Line::Line(string textLine){
 		textLine = textLine.substr(textLine.find(',') + 2);
 	}
 }
+Line::Line() {}
 
 ////////////////
 // get methods
