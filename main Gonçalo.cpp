@@ -21,57 +21,45 @@ using namespace std;
 //PROTOTYPING
 void MenuPrincipal();
 void InvalidInputMenu();
-void InvalidInputFicheiro();
+void InvalidInputFile();
 void ErrorErrorError(int &i);
-void MenuGravarFicheiro();
-void HorariosParagens();
-void HorariosLinhas();
-void GESTLINHA();
-void GESTCOND();
-void Informacoes();
-void AdicionarLinha();
-void RemoverLinha();
-void AlterarLinhaMenu();
-void AdicionarCondutor();
-void RemoverCondutor();
-void AlterarCondutorMenu();
-void VerLinhasExistentes();
-void VerPercursosExistentes();
-void VerCondutoresExistentes();
-void LinhasParagens();
-void CalcularTempoParagens();
+void SaveFileMenu();
+void ScheduleStops();
+void ScheduleLines();
+void LineManagment();
+void DriverManagment();
+void AddDriver();
+void RemoveDriver();
+void ChangeDriverMenu();
+void SeeExistingLines();
+void SeeExistingStops();
+void SeeExistingDrivers();
+void LinesStops();
+void CalcTimeStops();
 void streamsLinhasECondutores();
-void SaveFicheiroLinhas();
-void SaveFicheiroCondutores();
-int RetIDCondutores(int id);
-int RetIDLinhas(int id);
-int VerificarIDLinhas(int id);
-int VerificarIDCondutores(int id);
+void SaveFileLines();
+void SaveFileDrivers();
+int RetIDDrivers(int id);
+int RetIDLines(int id);
+int CheckIDLines(int id);
+int CheckIDDrivers(int id);
 int Commas(string stringe);
 
-//STRUCTS AND THEIR CORRESPONDING VECTORS
-struct Condutor {
-	string Nome;
-	int ID_Motorista;
-	int NHoras_Turno;
-	int NHoras_Semanais;
-	int NHoras_Descanso;
+//NOTAS PARA O TRABALHO:
+// FALTA FUNÇÃO PARA SABER TRABALHO DO CONDUTOR (EM QUE SE MOSTRA OS SHIFTS DIARIOS DELE)
+// REVER ADD,REMOVE,CHANGE DRIVER
+// COMO INICIALIZAR A MAIN (inicializar os ficheiros de texto - company)
+// CLASSE COMPANY TEM AINDA O VETOR DE LINES E DRIVERS
+// METER FUNÇAÕ DO NR DE BUS 
 
-};
-struct Linha {
-	int ID;   //or string ID, each at the own user's choice.
-	int Freq;
-	vector <string>  Paragens;
-	vector <int> tempoEntreViagem;
-};
 
 //VECTORS
-vector <Linha> Linhas;
-vector <Condutor> Condutores;
+vector <Driver> Drivers;
+vector <Line> Lines;
 
-//FICHEIROS
+//FILES
 
-void SaveFicheiroCondutores() {
+void SaveFileDrivers() {
 	string FicheiroCondutor;
 	"========================================================================================================\n";
 	cout << "Insira o nome do ficheiro de condutores que pretende gravar: \n";
@@ -81,16 +69,16 @@ void SaveFicheiroCondutores() {
 
 	FicheiroCondutores.open(FicheiroCondutor);
 
-	for (unsigned int i = 0; i < Condutores.size(); i++)
+	for (unsigned int i = 0; i < Drivers.size(); i++)
 	{
-		FicheiroCondutores << Condutores.at(i).ID_Motorista << " ; " << Condutores.at(i).Nome << " ; " << Condutores.at(i).NHoras_Turno << " ; " << Condutores.at(i).NHoras_Semanais << " ; " << Condutores.at(i).NHoras_Descanso << endl;
+		FicheiroCondutores << Drivers.at(i).getId << " ; " << Drivers.at(i).getName << " ; " << Drivers.at(i).getShiftMaxDuration << " ; " << Drivers.at(i).getMaxWeekWorkingTime << " ; " << Drivers.at(i).getMinRestTime << endl;
 	}
 	FicheiroCondutores.close();
 	cout << "\n\nFicheiro gravado! Retornando ao Menu Principal...\n";
 	"=======================================================================================================\n\n";
 	MenuPrincipal();
 }
-void SaveFicheiroLinhas() {
+void SaveFileLines() {
 	string FicheiroLinha;
 	"========================================================================================================\n";
 	cout << "Insira o nome do ficheiro de linhas que pretende gravar: \n";
@@ -100,28 +88,28 @@ void SaveFicheiroLinhas() {
 
 	FicheiroLinhas.open(FicheiroLinha);
 
-	for (unsigned int i = 0; i < Linhas.size(); i++)
+	for (unsigned int i = 0; i < Lines.size(); i++)
 	{
-		FicheiroLinhas << Linhas.at(i).ID << " ; " << Linhas.at(i).Freq << " ; ";
-		for (unsigned int j = 0; j < Linhas.at(i).Paragens.size(); j++)
+		FicheiroLinhas << Lines.at(i).getId << " ; " << Lines.at(i).getFreq << " ; ";
+		for (unsigned int j = 0; j < Lines.at(i).getBusStops.size(); j++)
 		{
-			if (j == Linhas.at(i).Paragens.size() - 1)
+			if (j == Lines.at(i).getBusStops.size() - 1)
 			{
-				FicheiroLinhas << Linhas.at(i).Paragens.at(j) << "; ";
+				FicheiroLinhas << Lines.at(i).getBusStops.at(j) << "; ";
 			}
 			else {
-				FicheiroLinhas << Linhas.at(i).Paragens.at(j) << ", ";
+				FicheiroLinhas << Lines.at(i).getBusStops.at(j) << ", ";
 			}
 		}
-		for (unsigned int k = 0; k < Linhas.at(i).tempoEntreViagem.size(); k++)
+		for (unsigned int k = 0; k < Lines.at(i).getTimings.size(); k++)
 		{
-			if (k == Linhas.at(i).tempoEntreViagem.size() - 1)
+			if (k == Lines.at(i).getTimings.size() - 1)
 			{
-				FicheiroLinhas << Linhas.at(i).tempoEntreViagem.at(k) << "";
+				FicheiroLinhas << Lines.at(i).getTimings.at(k) << "";
 			}
 
 			else {
-				FicheiroLinhas << Linhas.at(i).tempoEntreViagem.at(k) << ", ";
+				FicheiroLinhas << Lines.at(i).getTimings.at(k) << ", ";
 			}
 
 		}
@@ -133,7 +121,7 @@ void SaveFicheiroLinhas() {
 	MenuPrincipal();
 }
 
-//FUNÇÕES DE RECEÇÃO DE INFORMAÇÃO QUE FOI DADA POR INPUT PELO UTILIZADOR (LINHAS - CONDUTORES)
+//FUNÇÕES DE RECEÇÃO DE INFORMAÇÃO QUE FOI DADA POR INPUT PELO UTILIZADOR (LINES & DRIVERS)
 void streamsLinhasECondutores() {
 	//criar um vetor temporário, que irá ler a informação do ficheiro pretendido, e depositá-lo em formato de string
 	vector<string> input;
@@ -148,9 +136,9 @@ void streamsLinhasECondutores() {
 	cout << "========================================================================================================\n\n";
 }
 
-//FUNÇÕES DE TRATAMENTO DE HORÁRIOS
-//PARAGENS
-void HorariosParagens() {
+//Functions for the analysis of Schedules
+//STOPS & LINES
+void ScheduleStops() {
 	int id;
 	int flag = 0;
 	int indice;
@@ -163,13 +151,13 @@ void HorariosParagens() {
 		cin >> id;
 
 		if (cin.fail()) { //SE NÃO FOR INT
-			cout << endl << "Numero Inválido." << endl;
+			cout << endl << "Numero Invalido." << endl;
 			cin.clear();
 			cin.ignore(100000, '\n');
 		}
 		else {
-			for (unsigned int i = 0; i < Linhas.size(); i++) {
-				if (Linhas.at(i).ID == id) {
+			for (unsigned int i = 0; i < Lines.size(); i++) {
+				if (Lines.at(i).getId == id) {
 					flag = 1; // YAY!
 					indice = i;
 				}
@@ -178,7 +166,7 @@ void HorariosParagens() {
 				break;
 			}
 			else {
-				cout << "Não inseriu um ID correto!" << endl;
+				cout << "Nao inseriu um ID correto!" << endl;
 			}
 		}
 	}
@@ -186,13 +174,13 @@ void HorariosParagens() {
 	cout << "========================================================================================================\n";
 
 	int opcao;
-	for (unsigned int i = 0; i < Linhas.at(indice).Paragens.size(); i++) {
-		cout << i << " - " << Linhas.at(indice).Paragens.at(i) << endl;
+	for (unsigned int i = 0; i < Lines.at(indice).getBusStops.size(); i++) {
+		cout << i << " - " << Lines.at(indice).getBusStops.at(i) << endl;
 	}
 	while (true) {
 		cout << "Introduza a paragem que deseja:\n";
 		cin >> opcao;
-		if (cin.fail() || (opcao >= Linhas.at(indice).Paragens.size()) || (opcao < 0)) {
+		if (cin.fail() || (opcao >= Lines.at(indice).getBusStops.size()) || (opcao < 0)) {
 			cout << endl << "Invalido!" << endl;
 			cin.clear();
 			cin.ignore(100000, '\n');
@@ -203,7 +191,7 @@ void HorariosParagens() {
 	}
 
 	for (unsigned int i = 0; i < opcao; i++) {
-		minutos = minutos + Linhas.at(indice).tempoEntreViagem.at(i);
+		minutos = minutos + Lines.at(indice).getTimings.at(i);
 		if (minutos >= 60) {
 			minutos = minutos - 60;
 			horas = horas + 1; //I mean...
@@ -212,16 +200,16 @@ void HorariosParagens() {
 	cout << "HORARIO DESEJADO: (HORAS || ID da LINHA)\n";
 	cout << "========================================================================================================\n";
 	cout << horas << ":" << setfill('0') << setw(2);
-	cout << minutos << "   " << Linhas.at(indice).ID << endl;
+	cout << minutos << "   " << Lines.at(indice).getId << endl;
 	cout << "========================================================================================================\n";
 	for (unsigned int i = 0; i < 10; i++) {
-		minutos = minutos + Linhas.at(indice).Freq;
+		minutos = minutos + Lines.at(indice).getFreq;
 		if (minutos >= 60) {
 			minutos = minutos - 60;
 			horas = horas + 1;
 		}
 		cout <<"========================================================================================================\n";
-		cout << horas << ":" << setfill('0') << setw(2) << minutos << "   " << Linhas.at(indice).ID << endl;
+		cout << horas << ":" << setfill('0') << setw(2) << minutos << "   " << Lines.at(indice).getId<< endl;
 		cout <<"========================================================================================================\n";
 	}
 	cout << "Prima 0 para retornar ao Menu Principal...\n";
@@ -232,7 +220,7 @@ void HorariosParagens() {
 	cout << "========================================================================================================\n";
 	system("pause");
 }
-void HorariosLinhas() {
+void ScheduleLines() {
 	int id = 0;
 	int flag = 0;
 	int indice = 0;
@@ -250,8 +238,8 @@ void HorariosLinhas() {
 		}
 		else {
 			
-			for (int i = 0; i < Linhas.size(); i++) {
-				if (Linhas.at(i).ID == id) {
+			for (int i = 0; i < Lines.size(); i++) {
+				if (Lines.at(i).getId == id) {
 					flag = 1;
 					indice = i;//YAYX2
 				}
@@ -260,23 +248,23 @@ void HorariosLinhas() {
 				break;
 			}
 			else {
-				cout << "Não inseriu um ID correto!" << endl;
+				cout << "Nao inseriu um ID correto!" << endl;
 			}
 		}
 	}
 	cout << "HORARIO DESEJADO: (HORAS || PARAGENS)\n";
 	cout << "========================================================================================================\n";
-	cout << horas << ":" << setfill('0') << setw(2) << minutos << "   " << Linhas.at(indice).Paragens.at(0) << endl;
+	cout << horas << ":" << setfill('0') << setw(2) << minutos << "   " << Lines.at(indice).getBusStops.at(0) << endl;
 	cout << "========================================================================================================\n";
 
-	for (int n = 1; n < Linhas.at(indice).Paragens.size(); n++) {
-		minutos = minutos + Linhas.at(indice).tempoEntreViagem.at(n - 1);
+	for (int n = 1; n < Lines.at(indice).getBusStops.size(); n++) {
+		minutos = minutos + Lines.at(indice).getTimings.at(n - 1);
 		if (minutos >= 60) {
 			minutos = minutos - 60;
 			horas = horas + 1;
 		}
 		cout << "========================================================================================================\n";
-		cout << horas << ":" << setfill('0') << setw(2) << minutos << "   " << Linhas.at(indice).Paragens.at(n) << endl;
+		cout << horas << ":" << setfill('0') << setw(2) << minutos << "   " << Lines.at(indice).getBusStops.at(n) << endl;
 		cout << "========================================================================================================\n";
 	}
 	cout << "Prima 0 para retornar ao Menu Principal...\n";
@@ -287,135 +275,66 @@ void HorariosLinhas() {
 	cout << "========================================================================================================\n";
 };
 
-//FUNÇÕES DE TRATAMENTO DE INFORMAÇÃO QUE FOI DADA POR INPUT PELO UTILIZADOR (LINHAS - CONDUTORES)
-//ADICIONAR
-void AdicionarCondutor() {
+//FUNÇÕES for the treatment of information given by the user through his own input (DRIVERS)
+//ADDING
+void AddDriver() {
 	string Nome;
-	Condutor tempCondutor;
+	Driver tempCondutor;
 
 	cout << "========================================================================================================\n";
 	cout << "Indique o ID do motorista a adicionar: " << endl;
-	cin >> tempCondutor.ID_Motorista;
-	ErrorErrorError(tempCondutor.ID_Motorista);
+	cin >> tempCondutor.setId;
+	ErrorErrorError(tempCondutor.setId);
 
-	cout << "Indique o nome do motorista:  " << endl;
 	cin.ignore(1000, '\n');
-	getline(cin, tempCondutor.Nome);
+	cout << "Indique o nome do motorista:  " << endl;
+	getline(cin, Nome);
+	Drivers.at(RetIDDrivers(tempCondutor.getId)).setName = Nome;
 
 	cout << "Indique o numero de horas do turno do motorista:\n";
-	cin >> tempCondutor.NHoras_Turno;
-	ErrorErrorError(tempCondutor.NHoras_Turno);
+	cin >> tempCondutor.setMaxHours;
+	ErrorErrorError(tempCondutor.setMaxHours);
 
 	cout << "Indique o numero de horas semanais do motorista:\n";
-	cin >> tempCondutor.NHoras_Semanais;
-	ErrorErrorError(tempCondutor.NHoras_Semanais);
+	cin >> tempCondutor.setMaxWeekWorkingTime;
+	ErrorErrorError(tempCondutor.setMaxWeekWorkingTime);
 
 	cout << "Indique o numero de horas de descanso do motorista:\n";
-	cin >> tempCondutor.NHoras_Descanso;
-	ErrorErrorError(tempCondutor.NHoras_Descanso);
+	cin >> tempCondutor.setMinRestTime;
+	ErrorErrorError(tempCondutor.setMinRestTime);
 
 	cout << "========================================================================================================\n";
-	Condutores.push_back(tempCondutor);
+	Drivers.push_back(tempCondutor);
 	cout << "Condutor adicionado! \nRetornando ao Menu Principal...\n";
 	cout << "========================================================================================================\n";
 	MenuPrincipal();
 
 }
-void AdicionarLinha() {
+
+//REMOVING
+void RemoveDriver() {
 	int input = 0;
-	Linha tempLinha;
-	string tempParagem;
-	string tempTempoParagens;
-	cout << "========================================================================================================\n";
-	cout << "Indique o ID da linha a adicionar: " << endl;
-	cin >> tempLinha.ID;
-	ErrorErrorError(tempLinha.ID);
-
-	cout << "Indique a Frequencia de circulacao do autocarro: " << endl;
-	cin >> tempLinha.Freq;
-	ErrorErrorError(tempLinha.Freq);
-
-	cout << "Indique as paragens a sua linha inclui, separadas por virgula apenas (p.ex: Rato,Odivelas). \n";
-	//ADD de Paragens with getline
-	cin.ignore(1000, '\n');
-	getline(cin, tempParagem);
-
-	int contagem = Commas(tempParagem);
-
-	for (int i = 0; i < contagem; i++) {
-
-		tempLinha.Paragens.push_back(tempParagem.substr(0, tempParagem.find(",")));
-		tempParagem = tempParagem.substr(tempParagem.find(",") + 1);
-		//cout << tempLinha.Paragens[i] << endl;
-	}
-	tempLinha.Paragens.push_back(tempParagem.substr(1, tempParagem.size() - 1));
-	//cout << "tempparagens finalissimo:" << tempParagem << endl;// Confirmação que está a correr tudo como planeado.
-
-	cout << "Indique os tempos entre cada uma das paragens, separadas por virgula apenas(20,10,25). \n";
-	getline(cin, tempTempoParagens);
-
-	contagem = Commas(tempTempoParagens);
-
-	for (int i = 0; i < contagem; i++) {
-
-		tempLinha.tempoEntreViagem.push_back(stoi(tempTempoParagens.substr(0, tempTempoParagens.find(","))));
-		tempTempoParagens = tempTempoParagens.substr(tempTempoParagens.find(",") + 1);
-		cout << tempLinha.tempoEntreViagem[i] << endl;
-	}
-	tempLinha.tempoEntreViagem.push_back(stoi(tempTempoParagens.substr(1, tempTempoParagens.size() - 1)));
-	Linhas.push_back(tempLinha);
-
-	cout << "========================================================================================================\n";
-	cout << "Linha adicionada! \nRetornando ao Menu Principal...\n";
-	cout << "========================================================================================================\n";
-	MenuPrincipal();
-
-}
-
-//REMOVER
-void RemoverCondutor() {
-	int input = 0;
-	Condutor tempCondutor;
+	Driver tempCondutor;
 
 	cout << "========================================================================================================\n";
 	cout << "Indique o ID do motorista que pretende eliminar: ";
-	cin >> tempCondutor.ID_Motorista;
-	ErrorErrorError(tempCondutor.ID_Motorista);
+	cin >> tempCondutor.setId;
+	ErrorErrorError(tempCondutor.setId);
 
-	while (VerificarIDCondutores(tempCondutor.ID_Motorista) == -1) {
-		cin >> tempCondutor.ID_Motorista;
-		VerificarIDCondutores(tempCondutor.ID_Motorista);
+	while (CheckIDDrivers(tempCondutor.setId) == -1) {
+		cin >> tempCondutor.setId;
+		CheckIDDrivers(tempCondutor.setId);
 	}
 	//REMOÇÃO
-	Condutores.erase(Condutores.begin() + VerificarIDCondutores(tempCondutor.ID_Motorista));
+	Drivers.erase(Drivers.begin() + CheckIDDrivers(tempCondutor.getId));
 	cout << "========================================================================================================\n";
 	cout << "Motorista removido! \nRetornando ao Menu Principal...\n";
 	cout << "========================================================================================================\n";
 	MenuPrincipal();
 }
-void RemoverLinha() {
-	int input = 0;
-	Linha tempLinha;
 
-	cout << "========================================================================================================\n";
-	cout << "Indique o ID da linha que pretende eliminar: ";
-	cin >> tempLinha.ID;
-	ErrorErrorError(tempLinha.ID);
-
-	while (VerificarIDLinhas(tempLinha.ID) == -1) {
-		cin >> tempLinha.ID;
-		VerificarIDLinhas(tempLinha.ID);
-	}
-	//REMOÇÃO
-	Linhas.erase(Linhas.begin() + VerificarIDLinhas(tempLinha.ID));
-	cout << "========================================================================================================\n";
-	cout << "Linha removida! \nRetornando ao Menu Principal...\n";
-	cout << "========================================================================================================\n";
-	MenuPrincipal();
-}
-
-//EDITAR
-void AlterarCondutorMenu() {
+//EDITING
+void ChangeDriverMenu() {
 	string Nome;
 	int options;
 	int ID_Motorista;
@@ -424,7 +343,7 @@ void AlterarCondutorMenu() {
 	int NHoras_Descanso;
 	int contagem;
 	int tempid;
-	Condutor tempCondutor;
+	Driver tempCondutor;
 	options = -1;
 	ID_Motorista = -2;
 	NHoras_Turno = -1;
@@ -463,13 +382,13 @@ void AlterarCondutorMenu() {
 			do {
 				cin >> tempid;
 				ErrorErrorError(tempid);
-			} while (VerificarIDCondutores(tempid) == -1);
-			tempCondutor.ID_Motorista = tempid;
+			} while (CheckIDDrivers(tempid) == -1);
+			tempCondutor.setId = tempid;
 			cout << "Insira o numero desejado para o novo ID:\n";
 			cin >> ID_Motorista;
 			ErrorErrorError(ID_Motorista);
 
-			Condutores.at(RetIDCondutores(tempCondutor.ID_Motorista)).ID_Motorista = ID_Motorista;
+			Drivers.at(RetIDDrivers(tempCondutor.getId)).setId = ID_Motorista;
 			"\n========================================================================================================\n";
 			cout << "ID alterado! Retornando ao Menu Principal...\n";
 			"========================================================================================================\n";
@@ -483,15 +402,15 @@ void AlterarCondutorMenu() {
 			do {
 				cin >> tempid;
 				ErrorErrorError(tempid);
-				VerificarIDCondutores(tempid);
-			} while (VerificarIDCondutores(tempid) == -1);
-			tempCondutor.ID_Motorista = tempid;
+				CheckIDDrivers(tempid);
+			} while (CheckIDDrivers(tempid) == -1);
+			tempCondutor.setId= tempid;
 			cout << "Insira o nome do motorista: \n";
 
 			cin.ignore(1000, '\n');
 			getline(cin, Nome);
 
-			Condutores.at(RetIDCondutores(tempCondutor.ID_Motorista)).Nome = Nome;
+			Drivers.at(RetIDDrivers(tempCondutor.getId)).setName = Nome;
 			"\n========================================================================================================\n";
 			cout << "Nome alterado! Retornando ao Menu Principal...\n";
 			"========================================================================================================\n";
@@ -505,14 +424,14 @@ void AlterarCondutorMenu() {
 			do {
 				cin >> tempid;
 				ErrorErrorError(tempid);
-				VerificarIDCondutores(tempid);
-			} while (VerificarIDCondutores(tempid) == -1);
-			tempCondutor.ID_Motorista = tempid;
+				CheckIDDrivers(tempid);
+			} while (CheckIDDrivers(tempid) == -1);
+			tempCondutor.setId = tempid;
 			cout << "Insira o numero desejado de horas do turno correspondente:\n ";
 			cin >> NHoras_Turno;
 			ErrorErrorError(NHoras_Turno);
 
-			Condutores.at(RetIDCondutores(tempCondutor.ID_Motorista)).NHoras_Turno = NHoras_Turno;
+			Drivers.at(RetIDDrivers(tempCondutor.getId)).setMaxHours = NHoras_Turno;
 			"\n========================================================================================================\n";
 			cout << "Horas do turno alteradas! Retornando ao Menu Principal...\n";
 			"========================================================================================================\n";
@@ -526,14 +445,14 @@ void AlterarCondutorMenu() {
 			do {
 				cin >> tempid;
 				ErrorErrorError(tempid);
-				VerificarIDCondutores(tempid);
-			} while (VerificarIDCondutores(tempid) == -1);
-			tempCondutor.ID_Motorista = tempid;
+				CheckIDDrivers(tempid);
+			} while (CheckIDDrivers(tempid) == -1);
+			tempCondutor.setId = tempid;
 			cout << "Insira o numero desejado de horas semanais do motorista:\n ";
 			cin >> NHoras_Semanais;
 			ErrorErrorError(NHoras_Semanais);
 
-			Condutores.at(RetIDCondutores(tempCondutor.ID_Motorista)).NHoras_Semanais = NHoras_Semanais;
+			Drivers.at(RetIDDrivers(tempCondutor.getId)).setMaxWeekWorkingTime = NHoras_Semanais;
 			"\n========================================================================================================\n";
 			cout << "Horas semanais alteradas! Retornando ao Menu Principal...\n";
 			"========================================================================================================\n";
@@ -547,14 +466,14 @@ void AlterarCondutorMenu() {
 			do {
 				cin >> tempid;
 				ErrorErrorError(tempid);
-				VerificarIDCondutores(tempid);
-			} while (VerificarIDCondutores(tempid) == -1);
-			tempCondutor.ID_Motorista = tempid;
+				CheckIDDrivers(tempid);
+			} while (CheckIDDrivers(tempid) == -1);
+			tempCondutor.setId = tempid;
 			cout << "Insira o numero desejado de horas de descanso do motorista: ";
 			cin >> NHoras_Descanso;
 			ErrorErrorError(NHoras_Descanso);
 
-			Condutores.at(RetIDCondutores(tempCondutor.ID_Motorista)).NHoras_Descanso = NHoras_Descanso;
+			Drivers.at(RetIDDrivers(tempCondutor.getId)).setMinRestTime = NHoras_Descanso;
 			"\n========================================================================================================\n";
 			cout << "Horas de descanso alteradas! Retornando ao Menu Principal...\n";
 			"========================================================================================================\n";
@@ -567,162 +486,9 @@ void AlterarCondutorMenu() {
 		}
 	}
 }
-void AlterarLinhaMenu() {
-	int options;
-	int id;
-	int freq;
-	int nparagens;
-	int ntempos;
-	int contagem;
-	int tempid = 0;
-	string tempParagem;
-	string tempTempoParagens;
-	Linha tempLinha;
-	id = 0;
-	freq = 0;
-	nparagens = 0;
-	ntempos = 0;
-	options = 0;
-	contagem = 0;
-	"========================================================================================================\n";
-	cout << "Indique o elemento que pretende alterar na sua linha: \n";
-	cout << "Insira a sua opcao (1,2,...)\n";
-	cout << "1) ID \n";
-	cout << "2) Frequencia de Circulacao de Autocarros\n";
-	cout << "3) Paragens\n";
-	cout << "4) Tempos entre Viagens\n";
-	cout << "0) Menu Principal\n";
-	"========================================================================================================\n";
-	while (!cin.fail())
-	{
-		cin >> options;
-		switch (options) {
-		case 0:
-		{cout << "\n========================================================================================================\n";
-		cout << "Alteracao cancelada! Retornando ao Menu Principal...\n";
-		cout << "========================================================================================================\n";
-		MenuPrincipal();
-		break;
-		}
-		//ALTERAÇÃO DO ID
-		case 1:
-		{
-			cout << "========================================================================================================\n";
-			cout << "Insira o ID da linha que pretende alterar:\n ";
-			do {
-				cin >> tempid;
-				ErrorErrorError(tempid);
-				VerificarIDLinhas(tempid);
-			} while (VerificarIDLinhas(tempid) == -1);
-			cout << "Insira o numero desejado para o novo ID:\n";
-			cin >> id;
-			ErrorErrorError(id);
-
-			Linhas.at(RetIDLinhas(tempLinha.ID)).ID = id;
-			cout << "\n========================================================================================================\n";
-			cout << "ID alterado! Retornando ao Menu Principal...\n";
-			cout << "========================================================================================================\n";
-			MenuPrincipal();
-			break;
-		}
-		//ALTERAÇÃO DA FREQUENCIA DE CIRCULACAO
-		case 2:
-			cout << "========================================================================================================\n";
-			cout << "Insira o ID da linha que pretende alterar:\n";
-			do {
-				cin >> tempid;
-				ErrorErrorError(tempid);
-				VerificarIDLinhas(tempid);
-			} while (VerificarIDLinhas(tempid) == -1);
-			cout << "Insira o numero para a nova frequencia de circulacao: ";
-			cin >> freq;
-			ErrorErrorError(freq);
-
-			Linhas.at(RetIDLinhas(tempLinha.ID)).Freq = freq;
-			cout << "\n========================================================================================================\n";
-			cout << "Frequencia de circulacao alterada! Retornando ao Menu Principal...\n";
-			cout << "========================================================================================================\n";
-			MenuPrincipal();
-			break;
-
-			//ALTERAÇÃO DAS PARAGENS
-		case 3:
-		{
-			cout << "========================================================================================================\n";
-			cout << "Insira o ID da linha que pretende alterar:\n";
-			do {
-				cin >> tempid;
-				ErrorErrorError(tempid);
-				VerificarIDLinhas(tempid);
-			} while (VerificarIDLinhas(tempid) == -1);
-			cout << "Insira as paragens que vao alterar a linha, separadas por uma virgula apenas. No fim, acabar com uma virgula!! (p.ex: Paranhos,Hospital Sao Joao,):\n";
-
-			cin.ignore(1000000, '\n');
-			getline(cin, tempParagem);
-
-			int contagem = Commas(tempParagem);
-
-			int numeroI = RetIDLinhas(tempid);
-
-			Linhas.at(numeroI).Paragens.clear();
-			for (int i = 0; i < contagem; i++) {
-
-				Linhas.at(numeroI).Paragens.push_back(tempParagem.substr(0, tempParagem.find(",")));
-				tempParagem = tempParagem.substr(tempParagem.find(",") + 1);
-				//cout << tempLinha.Paragens[i] << endl;
-			}
-
-			//	cout << "tempparagens finalissimo:" << tempParagem << endl;// Confirmação que está a correr tudo como planeado.
-			cout << "\n========================================================================================================\n";
-			cout << "Paragens alteradas! Retornando ao Menu Principal...\n";
-			cout << "========================================================================================================\n";
-			MenuPrincipal();
-			break;
-		}
-
-		case 4:
-		{
-			cout << "========================================================================================================\n";
-			cout << "Insira o ID da linha que pretende alterar:\n";
-			do {
-				cin >> tempid;
-				ErrorErrorError(tempid);
-				VerificarIDLinhas(tempid);
-			} while (VerificarIDLinhas(tempid) == -1);
-
-			cout << "Indique os tempos entre cada uma das paragens, separadas por virgula apenas. No fim, acabar com uma virgula! (p.ex: 20,10,25,). \n";
-			cin.ignore(1000000, '\n');
-			getline(cin, tempTempoParagens);
-
-			contagem = Commas(tempTempoParagens);
-
-			int numeroI = RetIDLinhas(tempid);
-
-			Linhas.at(numeroI).tempoEntreViagem.clear();
-
-			for (int i = 0; i < contagem; i++) {
-
-				Linhas.at(numeroI).tempoEntreViagem.push_back(stoi(tempTempoParagens.substr(0, tempTempoParagens.find(","))));
-				tempTempoParagens = tempTempoParagens.substr(tempTempoParagens.find(",") + 1);
-				//cout << tempLinha.tempoEntreViagem[i] << endl;
-
-			}
-
-			cout << "\n========================================================================================================\n";
-			cout << "Tempos entre viagens alterados! Retornando ao Menu Principal...\n";
-			cout << "========================================================================================================\n";
-			MenuPrincipal();
-			break;
-		}
-		default:
-			InvalidInputMenu();
-			break;
-		}
-		}
-	}
 
 //CALCULA A DISTANCIA ENTRE 2 PARAGENS
-void CalcularTempoParagens() {
+void CalcTimeStops() {
 	int exit;
 	exit = -1;
 	string parg1, parg2;
@@ -732,41 +498,41 @@ void CalcularTempoParagens() {
 	cout << "Introduza a segunda paragem que deseja" << endl;
 	cin >> parg2;
 
-	for (unsigned int i = 0; i < Linhas.size(); i++)
+	for (unsigned int i = 0; i < Lines.size(); i++)
 	{
 		int par1 = 0;
 		int par2 = 0;
-		for (unsigned int j = 0; j < Linhas.at(i).Paragens.size(); j++)
+		for (unsigned int j = 0; j < Lines.at(i).getBusStops.size(); j++)
 		{
-			if (Linhas.at(i).Paragens.at(j) == parg1)
+			if (Lines.at(i).getBusStops.at(j) == parg1)
 			{
 				par1 = j;
 			}
 
-			if (Linhas.at(i).Paragens.at(j) == parg2)
+			if (Lines.at(i).getBusStops.at(j) == parg2)
 			{
 				par2 = j;
 			}
 		}
-		if (par1 != -1 && par2 != -1) //Linha.at(i) tem as DUAS paragens
+		if (par1 != -1 && par2 != -1) //Lines.at(i) has the 2 stops!!
 		{
 
 			if (par1 > par2)
 			{
 				cout << "========================================================================================================\n";
-				cout << "SENTIDO: " << Linhas.at(i).Paragens.at(0); //Unidireccional
+				cout << "SENTIDO: " << Lines.at(i).getBusStops.at(0); //Unidirectional
 			}
 
 			else
 			{
 				cout << "========================================================================================================\n";
-				cout << "SENTIDO: " << Linhas.at(i).Paragens.at(Linhas.at(i).Paragens.size() - 1); //Volta
+				cout << "SENTIDO: " << Lines.at(i).getBusStops.at(Lines.at(i).getBusStops.size() - 1); //Coming back
 
 			}
 			int tempo = 0;
 			for (int k = (par1 > par2 ? par2 : par1); k < (par1 < par2 ? par2 : par1); k++) // iterar do par mais pequeno ao maior, k sendo a posicao no vetor tempo
 			{
-				tempo += Linhas.at(i).tempoEntreViagem.at(k);
+				tempo += Lines.at(i).getTimings.at(k);
 			}
 
 			cout << endl;
@@ -781,21 +547,22 @@ void CalcularTempoParagens() {
 	}
 }
 
-//FUNÇÕES DE TRATAMENTO DAS INFORMAÇÕES (HORARIOS, LINHAS, PERCURSOS)
-//PERMITE VER A LINHA EXATAMENTE COMO ESTÁ NO FICHEIRO
-void VerPercursosExistentes() {
+//INFORMATIONS (HORARIOS, LINHAS, PERCURSOS)
+//Funcions that deal with the treatment of information
+//Allows us to see the lines exactly how they are shown in the .txt file
+void SeeExistingStops() {
 	int exit;
 	exit = -1;
 
 	cout << "========================================================================================================";
 	cout << "\nPERCURSOS EXISTENTES: \n\n";
-	for (unsigned int i = 0; i < Linhas.size(); i++) {
+	for (unsigned int i = 0; i < Lines.size(); i++) {
 
-		for (unsigned int f = 0; f < Linhas.at(i).Paragens.size(); f++) {
+		for (unsigned int f = 0; f < Lines.at(i).getBusStops.size(); f++) {
 
-			cout << "||ID - " << Linhas.at(i).ID << "|| ";
+			cout << "||ID - " << Lines.at(i).getId << "|| ";
 
-			cout << Linhas.at(i).Paragens.at(f);
+			cout << Lines.at(i).getBusStops.at(f);
 
 			cout << ";\n";
 		}
@@ -806,23 +573,23 @@ void VerPercursosExistentes() {
 	ErrorErrorError(exit);
 	MenuPrincipal();
 }
-void VerLinhasExistentes() {
+void SeeExistingLines() {
 	int exit;
 	exit = -1;
 
 	cout << "LINHAS EXISTENTES: \n\n";
-	for (unsigned int i = 0; i < Linhas.size(); i++) {
-		cout << "||NR - " << (i + 1) << "|| " << Linhas.at(i).ID << " ; " << Linhas.at(i).Freq << " ; ";
-		for (unsigned int j = 0; j < Linhas.at(i).Paragens.size(); j++) {
-			cout << Linhas.at(i).Paragens[j];
-			if ((j + 1) < Linhas.at(i).Paragens.size()) {
+	for (unsigned int i = 0; i < Lines.size(); i++) {
+		cout << "||NR - " << (i + 1) << "|| " << Lines.at(i).getId << " ; " << Lines.at(i).getFreq << " ; ";
+		for (unsigned int j = 0; j < Lines.at(i).getBusStops.size(); j++) {
+			cout << Lines.at(i).getBusStops[j];
+			if ((j + 1) < Lines.at(i).getBusStops.size()) {
 				cout << ", ";
 			}
 		}
 		cout << "; ";
-		for (unsigned int j = 0; j < Linhas.at(i).tempoEntreViagem.size(); j++) {
-			cout << Linhas.at(i).tempoEntreViagem[j];
-			if ((j + 1) < Linhas.at(i).tempoEntreViagem.size())
+		for (unsigned int j = 0; j < Lines.at(i).getTimings.size(); j++) {
+			cout << Lines.at(i).getTimings[j];
+			if ((j + 1) < Lines.at(i).getTimings.size())
 				cout << ", ";
 		}
 		cout << endl;
@@ -832,21 +599,21 @@ void VerLinhasExistentes() {
 
 	MenuPrincipal();
 }
-void VerCondutoresExistentes() {
+void SeeExistingDrivers() {
 	int exit;
 	exit = -1;
 
 	cout << "|| # || Condutores EXISTENTES || Horas Diarias || Horas Semamanais || Horas Descanso \n\n";
 
-	for (unsigned int i = 0; i < Condutores.size(); i++) {
-		cout << "||NR - " << (i + 1) << "|| " << Condutores.at(i).Nome << "\t  " << Condutores.at(i).NHoras_Turno << "\t\t     " << Condutores.at(i).NHoras_Semanais << "\t\t        " << Condutores.at(i).NHoras_Descanso << endl;
+	for (unsigned int i = 0; i < Drivers.size(); i++) {
+		cout << "||NR - " << (i + 1) << "|| " << Drivers.at(i).getName << "\t  " << Drivers.at(i).getShifts << "\t\t     " << Drivers.at(i).getMaxWeekWorkingTime << "\t\t        " << Drivers.at(i).getMinRestTime << endl;
 	}
 	cout << "\n\n Insira o numero 0 para voltar ao menu principal...\n\n";
 	cin >> exit;
 
 	MenuPrincipal();
 }
-void LinhasParagens()
+void LinesStops()
 {
 	bool existe = false;
 	string paragem;
@@ -858,13 +625,13 @@ void LinhasParagens()
 
 	while (!existe) {
 
-		for (unsigned int i = 0; i < Linhas.size(); i++) {
+		for (unsigned int i = 0; i < Lines.size(); i++) {
 
-			for (unsigned int f = 0; f < Linhas.at(i).Paragens.size(); f++) {
+			for (unsigned int f = 0; f < Lines.at(i).getBusStops.size(); f++) {
 
-				if (paragem == Linhas.at(i).Paragens.at(f)) {
+				if (paragem == Lines.at(i).getBusStops.at(f)) {
 					cout << "Lista de linhas que passam por esta paragem: " << endl;
-					cout << Linhas.at(i).ID << endl;
+					cout << Lines.at(i).getId << endl;
 					existe = true;
 				}
 			}
@@ -878,18 +645,18 @@ void LinhasParagens()
 	cout << "========================================================================================================\n";
 }
 
-//VERIFICAÇÃO DO INDEX DO VETOR
-int RetIDLinhas(int id) {
-	for (unsigned int i = 0; i < Linhas.size(); i++) {
-		if (Linhas.at(i).ID == id) {
+//Functions that deal with the verification of the index of the corresponding vector
+int RetIDLines(int id) {
+	for (unsigned int i = 0; i < Lines.size(); i++) {
+		if (Lines.at(i).getId == id) {
 			return i;
 		}
 	}
 	return -1;
 }
-int RetIDCondutores(int id) {
-	for (unsigned int i = 0; i < Condutores.size(); i++) {
-		if (Condutores.at(i).ID_Motorista == id) {
+int RetIDDrivers(int id) {
+	for (unsigned int i = 0; i < Drivers.size(); i++) {
+		if (Drivers.at(i).getId == id) {
 			return i;
 		}
 	}
@@ -897,7 +664,7 @@ int RetIDCondutores(int id) {
 }
 
 //MENUS MENUS MENUS
-//FUNÇÃO RESPONSÁVEL POR LIDAR COM INPUTS INVÁLIDOS NO MENU PRINCIPAL/RESTANTES MENUS DA EMPRESA SEMPRARROLAR
+//Functions that deal w/Invalid Inputs in the Main Menu & the remaining ones of the company
 void ErrorErrorError(int &i) {
 	while (cin.fail()) {
 		cout << "Introduziu uma resposta errada, introduza novamente. ";
@@ -923,7 +690,7 @@ void InvalidInputMenu() {
 		MenuPrincipal();
 	}
 }
-void InvalidInputFicheiro()
+void InvalidInputFile()
 {
 	cout << "\nIntroduziu uma resposta invalida. Por favor, tente de novo. \n\n";
 	if (cin.fail())
@@ -938,11 +705,11 @@ void InvalidInputFicheiro()
 		streamsLinhasECondutores();
 	}
 }
-int VerificarIDLinhas(int id) {
+int CheckIDLines(int id) {
 	int flag = 0;
 	int newid;
-	for (unsigned int i = 0; i < Linhas.size(); i++) {
-		if (Linhas.at(i).ID == id) {
+	for (unsigned int i = 0; i < Lines.size(); i++) {
+		if (Lines.at(i).getId == id) {
 			flag = 1;
 			newid = i;
 		}
@@ -955,11 +722,11 @@ int VerificarIDLinhas(int id) {
 		return -1;
 	}
 }
-int VerificarIDCondutores(int id) {
+int CheckIDDrivers(int id) {
 	int flag = 0;
 	int newid;
-	for (unsigned int i = 0; i < Condutores.size(); i++) {
-		if (Condutores.at(i).ID_Motorista == id) {
+	for (unsigned int i = 0; i < Drivers.size(); i++) {
+		if (Drivers.at(i).getId == id) {
 			flag = 1;
 			newid = i;
 		}
@@ -974,8 +741,8 @@ int VerificarIDCondutores(int id) {
 }
 
 //MENU
-//FUNÇÃO RESPOSÁVEL PARA ORGANIZAÇÃO DE HORÁRIOS
-void InfHorario() {
+//Function for the organization of Schedules
+void Schedule() {
 	int options;
 	options = -1;
 	cout << "========================================================================================================";
@@ -995,19 +762,19 @@ void InfHorario() {
 			break;
 
 		case 1:
-			HorariosLinhas();
+			ScheduleLines();
 			break;
 
 		case 2:
-			HorariosParagens();
+			ScheduleStops();
 			break;
 		}
 	}
 }
 
 //MENU
-//Função para geração de Linhas
-void GESTLINHA() {
+//Function for managing Lines
+void LineManagment() {
 	int options;
 	options = -1;;
 	cout << "========================================================================================================";
@@ -1028,24 +795,24 @@ void GESTLINHA() {
 			break;
 
 		case 1:
-			InfHorario();
+			Schedule();
 			break;
 
 		case 2:
-			VerLinhasExistentes();
+			SeeExistingLines();
 			break;
 
 		case 3:
-			VerPercursosExistentes();
+			SeeExistingStops();
 			break;
 
 		case 4:
-			LinhasParagens();
+			LinesStops();
 			break;
 			//in case of wrong input
 
 		case 5:
-			CalcularTempoParagens();
+			CalcTimeStops();
 			break;
 
 			//in case of wrong input
@@ -1057,8 +824,8 @@ void GESTLINHA() {
 }
 
 //MENU
-//Função para geração de Condutores
-void GESTCOND() {
+//Function for managing Drivers
+void DriverManagment() {
 	int options;
 	options = -1;
 	cout << "========================================================================================================";
@@ -1078,13 +845,13 @@ void GESTCOND() {
 			MenuPrincipal();
 			break;
 		case 1:
-			AdicionarCondutor();
+			AddDriver();
 		case 2:
-			RemoverCondutor();
+			RemoveDriver();
 		case 3:
-			AlterarCondutorMenu();
+			ChangeDriverMenu();
 		case 4:
-			VerCondutoresExistentes();
+			SeeExistingDrivers();
 			break;
 
 			//in case of wrong input
@@ -1096,8 +863,8 @@ void GESTCOND() {
 }
 
 //MENU
-//Função para gravar ficheiros
-void MenuGravarFicheiro() {
+//Function for file saving
+void SaveFileMenu() {
 	int options;
 	options = -1;
 	cout << "========================================================================================================";
@@ -1115,9 +882,9 @@ void MenuGravarFicheiro() {
 			MenuPrincipal();
 			break;
 		case 1:
-			SaveFicheiroCondutores();
+			SaveFileDrivers();
 		case 2:
-			SaveFicheiroLinhas();
+			SaveFileLines();
 		default:
 			InvalidInputMenu();
 			break;
@@ -1126,7 +893,7 @@ void MenuGravarFicheiro() {
 }
 
 //MENU
-//Função para Menu Principal
+//Function for the Main Menu
 void MenuPrincipal() {
 	vector<string> input;
 	int options;
@@ -1159,16 +926,13 @@ void MenuPrincipal() {
 			cout << "\n\n";
 			exit(0);
 		case 1:
-			GESTLINHA();
+			LineManagment();
 			break;
 		case 2:
-			GESTCOND();
+			DriverManagment();
 			break;
 		case 3:
-			Informacoes();
-			break;
-		case 4:
-			MenuGravarFicheiro();
+			SaveFileMenu();
 			break;
 		default:
 			InvalidInputMenu();
@@ -1178,7 +942,7 @@ void MenuPrincipal() {
 }
 
 
-//OUTRAS FUNÇÕES
+//OTHER FUNCTIONS
 int Commas(string stringe) {
 	char checkCharacter = ',';
 	int count = 0;
@@ -1196,8 +960,8 @@ int Commas(string stringe) {
 
 //MAIN
 int main() {
-	streamsLinhasECondutores();
 
+	streamsLinhasECondutores();
 	MenuPrincipal();
 
 	system("PAUSE");
