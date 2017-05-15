@@ -36,8 +36,8 @@ void SeeExistingLines();
 void SeeExistingStops();
 void SeeExistingDrivers();
 void LinesStops();
-//void CalcTimeStops();
 void ROUTES();
+void DriversShifts();
 void BusMenu();
 void nrBusCalculation();
 //void BusesDistribution();
@@ -50,6 +50,7 @@ int RetIDLines(unsigned int id);
 int CheckIDLines(unsigned int id);
 int CheckIDDrivers(unsigned int id);
 int Commas(string stringe);
+unsigned int hrs2min(unsigned int &mins);
 
 //VECTORS
 vector <Driver> Drivers;
@@ -119,36 +120,6 @@ void SaveFileLines() {
 }
 
 //FUNCTIONS THAT RECEIVE INFORMATION GIVEN BY THE USER THROUGH HIS INPUT(LINES & DRIVERS)
-/*void BusesDistribution() {
-	for (unsigned int i = 0; i < Lines.size(); i++) {
-		for (unsigned int j = 1; j <= Lines.at(i).nrBuses(); j++) {
-			Lines.at(i).getBuses().at(j - 1).setOrderInLine(j);
-			Lines.at(i).getBuses().at(j - 1).setLineId(Lines.at(i).getId());
-			switch (j) {
-			case 1: {
-				unsigned int end = startime;
-				unsigned int start = startime;
-				while (start <= endtime) {
-					start = start + Lines.at(i).timeIteration();
-				}
-				end = start + Lines.at(i).timeIteration() - 1;
-				Lines.at(i).getBuses().at(j - 1).setSchedule(j - 1, startime, end);
-				break;
-			}
-			default: {
-				unsigned int start = Lines.at(i).getBuses().at(j - 2).getSchedule().at(0).getStartTime();
-				unsigned int acc = start, end = 0;
-				while (acc <= endtime) {
-					acc = acc + Lines.at(i).timeIteration();
-				}
-				end = acc + Lines.at(i).timeIteration() - 1;
-				Lines.at(i).getBuses().at(j - 1).setSchedule(j - 1, start, end);
-				break;
-			}
-			}
-		}
-	}
-} */
 void streamsLinesDrivers() {
 	//temporary vector, that will read the information of the pretended file and deposit all in the form of a string
 	vector<string> input;
@@ -589,6 +560,7 @@ void ROUTES()
 	{
 		cout << "========================================================================================================\n";
 		cout << "Introduza a primeira paragem que deseja: " << endl;
+		cin.ignore(3000, '\n');
 		getline(cin, stop1);
 		for (unsigned int i1 = 0; i1 < Lines.size(); i1++){
 			for (unsigned int i2 = 0; i2 < Lines.at(i1).getBusStops().size(); i2++){
@@ -598,12 +570,13 @@ void ROUTES()
 			}
 		}
 		if (vecStop1.size() == 0){
-			cout << "A paragem não se encontra em nenhuma linha. Volte a introduzir." << endl;
+			cout << "A paragem nao se encontra em nenhuma linha. Volte a introduzir." << endl;
 		}
 	} while (vecStop1.size() == 0);
 
 	do{
 		cout << "Introduza a segunda paragem que deseja" << endl;
+		cin.ignore(3000, '\n');
 		getline(cin, stop2);
 
 		for (unsigned int i1 = 0; i1 < Lines.size(); i1++){
@@ -614,7 +587,7 @@ void ROUTES()
 			}
 		}
 		if (vecStop2.size() == 0){
-			cout << "A paragem não se encontra em nenhuma linha. Volte a introduzir." << endl;
+			cout << "A paragem nao se encontra em nenhuma linha. Volte a introduzir." << endl;
 		}
 	} while (vecStop2.size() == 0);
 
@@ -968,6 +941,42 @@ void nrBusCalculation() {
 	cout << "========================================================================================================\n\n";
 }
 
+//Function that deals with the shifts of the driver
+void DriversShifts() {
+	unsigned int mins;
+	unsigned int id;
+	cout << "Insira o ID do motorista que quer consultar:\n";
+	do {
+		cin >> id;
+		ErrorErrorError(id);
+	} while (CheckIDDrivers(id) == -1);
+	for (unsigned int i = 0; i < Drivers.at(RetIDDrivers(id)).getShifts().size(); i++) {
+		mins = Drivers.at(RetIDDrivers(id)).getShifts().at(i).getStartTime();
+
+		if (mins >= 0 && mins <= 1439) { // monday
+			cout << "Segunda feira: \n";
+		}
+		if (mins >= 1440 && mins <= 2879) { // tuesday
+			cout << "Terça feira: \n";
+		}
+		if (mins >= 2880 && mins <= 4319) { // wednesday
+			cout << "Quarta feira: \n";
+		}
+		if (mins >= 4320 && mins <= 5759) { // thursday
+			cout << "Quinta feira: \n";
+		}
+		if (mins >= 5760 && mins <= 7199) { // friday
+			cout << "Sexta feira: \n";
+		}
+
+		cout << "Das " << hrs2min(mins) << ":" << setfill('0') << setw(2);
+		cout << mins << " até às ";
+		mins = Drivers.at(RetIDDrivers(id)).getShifts().at(i).getEndTime();
+		cout << hrs2min(mins) << ":" << setfill('0') << setw(2);
+		cout << mins << endl;
+	}
+}
+
 //Functions that deal with the verification of the index of the corresponding vector
 int RetIDLines(unsigned int id) {
 	for (unsigned int i = 0; i < Lines.size(); i++) {
@@ -1206,6 +1215,7 @@ void DriverManagment() {
 	cout << "2) Remover Condutores\n";
 	cout << "3) Alterar Condutores\n";
 	cout << "4) Ver Condutores existentes\n";
+	cout << "5) Ver trabalho de um Condutor\n";
 	cout << "0) Menu Principal\n";
 	cout << "========================================================================================================\n\n";
 	while (!cin.fail()) {
@@ -1222,6 +1232,9 @@ void DriverManagment() {
 			ChangeDriverMenu();
 		case 4:
 			SeeExistingDrivers();
+			break;
+		case 5:
+			DriversShifts();
 			break;
 
 			//in case of wrong input
@@ -1331,9 +1344,17 @@ int Commas(string stringe) {
 	return count;
 }
 
+//Function regarding the Hours & minutes in days
+unsigned int hrs2min(unsigned int &mins) {
+	unsigned int hrs = 0;
+	hrs = mins / 60;
+	mins = mins % 60;
+	return hrs;
+}
+
+
 //MAIN
 int main() {
-
 	streamsLinesDrivers();
 	MenuPrincipal();
 
