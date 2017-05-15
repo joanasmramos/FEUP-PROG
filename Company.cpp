@@ -11,7 +11,6 @@ Company::Company(string name, string driversFile, string linesFile) {
 
 		string name_f, lined;
 		ifstream drivers_f;
-		vector <Driver> Drivers;
 
 		cout << "Introduza o nome do ficheiro de condutores: ";
 		cin >> name_f;
@@ -38,7 +37,6 @@ Company::Company(string name, string driversFile, string linesFile) {
 		//Lines Files
 		string name_f, linel;
 		ifstream lines_f;
-		vector <Line> Lines;
 
 		cout << "Introduza o nome do ficheiro de linhas: ";
 		cin >> name_f;

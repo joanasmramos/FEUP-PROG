@@ -23,6 +23,7 @@ void MenuPrincipal();
 void InvalidInputMenu();
 void InvalidInputFile();
 void ErrorErrorError(int &i);
+void ErrorErrorError(unsigned int &i); //overloading of the function ErrorErrorError
 void SaveFileMenu();
 void ScheduleStops();
 void ScheduleLines();
@@ -39,18 +40,18 @@ void CalcTimeStops();
 void streamsLinhasECondutores();
 void SaveFileLines();
 void SaveFileDrivers();
-int RetIDDrivers(int id);
-int RetIDLines(int id);
-int CheckIDLines(int id);
-int CheckIDDrivers(int id);
+int RetIDDrivers(unsigned int id);
+int RetIDLines(unsigned int id);
+int CheckIDLines(unsigned int id);
+int CheckIDDrivers(unsigned int id);
 int Commas(string stringe);
 
 //NOTAS PARA O TRABALHO:
 // FALTA FUNÇÃO PARA SABER TRABALHO DO CONDUTOR (EM QUE SE MOSTRA OS SHIFTS DIARIOS DELE)
-// REVER ADD,REMOVE,CHANGE DRIVER
-// COMO INICIALIZAR A MAIN (inicializar os ficheiros de texto - company)
-// CLASSE COMPANY TEM AINDA O VETOR DE LINES E DRIVERS
-// METER FUNÇAÕ DO NR DE BUS 
+// REVER ADD,REMOVE,CHANGE DRIVER -------- JÁ REVI TUDO E EM PRINCÍPIO JÁ ESTÁ BEM
+// COMO INICIALIZAR A MAIN (inicializar os ficheiros de texto - company) -------- NÃO PERCEBI
+// CLASSE COMPANY TEM AINDA O VETOR DE LINES E DRIVERS -------- JÁ APAGUEI
+// METER FUNÇAÕ DO NR DE BUS --------- SE FOR A QUE ELES DÃO A FÓRMULA JÁ TÁ FEITA NO Line.cpp (other methods)
 
 
 //VECTORS
@@ -139,7 +140,7 @@ void streamsLinhasECondutores() {
 //Functions for the analysis of Schedules
 //STOPS & LINES
 void ScheduleStops() {
-	int id;
+	unsigned int id;
 	int flag = 0;
 	int indice;
 	int horas = 13;
@@ -177,6 +178,7 @@ void ScheduleStops() {
 	for (unsigned int i = 0; i < Lines.at(indice).getBusStops.size(); i++) {
 		cout << i << " - " << Lines.at(indice).getBusStops.at(i) << endl;
 	}
+	//verifying if the input is valid
 	while (true) {
 		cout << "Introduza a paragem que deseja:\n";
 		cin >> opcao;
@@ -221,7 +223,7 @@ void ScheduleStops() {
 	system("pause");
 }
 void ScheduleLines() {
-	int id = 0;
+	unsigned int id = 0;
 	int flag = 0;
 	int indice = 0;
 	int input = -1;
@@ -280,28 +282,39 @@ void ScheduleLines() {
 void AddDriver() {
 	string Nome;
 	Driver tempCondutor;
+	unsigned int tempid;
+	unsigned int tempmaxhours;
+	unsigned int tempMaxWeekWorkingTime;
+	unsigned int tempMinRestTime;
 
 	cout << "========================================================================================================\n";
 	cout << "Indique o ID do motorista a adicionar: " << endl;
-	cin >> tempCondutor.setId;
-	ErrorErrorError(tempCondutor.setId);
+	cin >> tempid;
+	//cin >> tempCondutor.setId;
+	//não percebi muito bem o argumento da ErrorErrorError... tempCondutor.setId retorna void sempre porque é um método set
+	//ErrorErrorError(tempCondutor.setId);
+	ErrorErrorError(tempid);
+	tempCondutor.setId(tempid);
 
 	cin.ignore(1000, '\n');
 	cout << "Indique o nome do motorista:  " << endl;
 	getline(cin, Nome);
-	Drivers.at(RetIDDrivers(tempCondutor.getId)).setName = Nome;
+	Drivers.at(RetIDDrivers(tempCondutor.getId)).setName(nome);
 
-	cout << "Indique o numero de horas do turno do motorista:\n";
-	cin >> tempCondutor.setMaxHours;
-	ErrorErrorError(tempCondutor.setMaxHours);
+	cout << "Indique o numero máximo de horas do turno do motorista:\n";
+	cin >> tempmaxhours;
+	ErrorErrorError(tempmaxhours);
+	tempCondutor.setMaxHours(tempmaxhours)
 
 	cout << "Indique o numero de horas semanais do motorista:\n";
-	cin >> tempCondutor.setMaxWeekWorkingTime;
-	ErrorErrorError(tempCondutor.setMaxWeekWorkingTime);
+	cin >> tempMaxWeekWorkingTime;
+	ErrorErrorError(tempMaxWeekWorkingTime);
+	tempCondutor.setMaxWeekWorkingTime(tempMaxWeekWorkingTime);
 
 	cout << "Indique o numero de horas de descanso do motorista:\n";
-	cin >> tempCondutor.setMinRestTime;
-	ErrorErrorError(tempCondutor.setMinRestTime);
+	cin >> tempMinRestTime;
+	ErrorErrorError(tempMinRestTime);
+	tempCondutor.setMinRestTime(tempMinRestTime);
 
 	cout << "========================================================================================================\n";
 	Drivers.push_back(tempCondutor);
@@ -315,18 +328,19 @@ void AddDriver() {
 void RemoveDriver() {
 	int input = 0;
 	Driver tempCondutor;
+	unsigned int tempId;
 
 	cout << "========================================================================================================\n";
 	cout << "Indique o ID do motorista que pretende eliminar: ";
-	cin >> tempCondutor.setId;
-	ErrorErrorError(tempCondutor.setId);
+	cin >> tempId;
+	ErrorErrorError(tempId);
 
-	while (CheckIDDrivers(tempCondutor.setId) == -1) {
-		cin >> tempCondutor.setId;
-		CheckIDDrivers(tempCondutor.setId);
+	while (CheckIDDrivers(tempId) == -1) {
+		cin >> tempId;
+		CheckIDDrivers(tempId);
 	}
 	//REMOÇÃO
-	Drivers.erase(Drivers.begin() + CheckIDDrivers(tempCondutor.getId));
+	Drivers.erase(Drivers.begin() + RetIDDrivers(tempId));
 	cout << "========================================================================================================\n";
 	cout << "Motorista removido! \nRetornando ao Menu Principal...\n";
 	cout << "========================================================================================================\n";
@@ -337,12 +351,12 @@ void RemoveDriver() {
 void ChangeDriverMenu() {
 	string Nome;
 	int options;
-	int ID_Motorista;
-	int NHoras_Turno;
-	int NHoras_Semanais;
-	int NHoras_Descanso;
+	unsigned int ID_Motorista;
+	unsigned int NHoras_Turno;
+	unsigned int NHoras_Semanais;
+	unsigned int NHoras_Descanso;
 	int contagem;
-	int tempid;
+	unsigned int tempid;
 	Driver tempCondutor;
 	options = -1;
 	ID_Motorista = -2;
@@ -383,12 +397,10 @@ void ChangeDriverMenu() {
 				cin >> tempid;
 				ErrorErrorError(tempid);
 			} while (CheckIDDrivers(tempid) == -1);
-			tempCondutor.setId = tempid;
 			cout << "Insira o numero desejado para o novo ID:\n";
 			cin >> ID_Motorista;
 			ErrorErrorError(ID_Motorista);
-
-			Drivers.at(RetIDDrivers(tempCondutor.getId)).setId = ID_Motorista;
+			Drivers.at(RetIDDrivers(tempid)).setId(ID_Motorista);
 			"\n========================================================================================================\n";
 			cout << "ID alterado! Retornando ao Menu Principal...\n";
 			"========================================================================================================\n";
@@ -404,13 +416,13 @@ void ChangeDriverMenu() {
 				ErrorErrorError(tempid);
 				CheckIDDrivers(tempid);
 			} while (CheckIDDrivers(tempid) == -1);
-			tempCondutor.setId= tempid;
 			cout << "Insira o nome do motorista: \n";
 
+			//Aqui o cin.ignore não pode dar asneira? Tipo ignorar tudo o que o utilizador escreveu
 			cin.ignore(1000, '\n');
 			getline(cin, Nome);
 
-			Drivers.at(RetIDDrivers(tempCondutor.getId)).setName = Nome;
+			Drivers.at(RetIDDrivers(tempid)).setName(Nome);
 			"\n========================================================================================================\n";
 			cout << "Nome alterado! Retornando ao Menu Principal...\n";
 			"========================================================================================================\n";
@@ -426,12 +438,11 @@ void ChangeDriverMenu() {
 				ErrorErrorError(tempid);
 				CheckIDDrivers(tempid);
 			} while (CheckIDDrivers(tempid) == -1);
-			tempCondutor.setId = tempid;
 			cout << "Insira o numero desejado de horas do turno correspondente:\n ";
 			cin >> NHoras_Turno;
 			ErrorErrorError(NHoras_Turno);
 
-			Drivers.at(RetIDDrivers(tempCondutor.getId)).setMaxHours = NHoras_Turno;
+			Drivers.at(RetIDDrivers(tempid)).setMaxHours(NHoras_Turno);
 			"\n========================================================================================================\n";
 			cout << "Horas do turno alteradas! Retornando ao Menu Principal...\n";
 			"========================================================================================================\n";
@@ -447,12 +458,11 @@ void ChangeDriverMenu() {
 				ErrorErrorError(tempid);
 				CheckIDDrivers(tempid);
 			} while (CheckIDDrivers(tempid) == -1);
-			tempCondutor.setId = tempid;
 			cout << "Insira o numero desejado de horas semanais do motorista:\n ";
 			cin >> NHoras_Semanais;
 			ErrorErrorError(NHoras_Semanais);
 
-			Drivers.at(RetIDDrivers(tempCondutor.getId)).setMaxWeekWorkingTime = NHoras_Semanais;
+			Drivers.at(RetIDDrivers(tempid)).setMaxWeekWorkingTime(NHoras_Semanais);
 			"\n========================================================================================================\n";
 			cout << "Horas semanais alteradas! Retornando ao Menu Principal...\n";
 			"========================================================================================================\n";
@@ -468,12 +478,10 @@ void ChangeDriverMenu() {
 				ErrorErrorError(tempid);
 				CheckIDDrivers(tempid);
 			} while (CheckIDDrivers(tempid) == -1);
-			tempCondutor.setId = tempid;
 			cout << "Insira o numero desejado de horas de descanso do motorista: ";
 			cin >> NHoras_Descanso;
 			ErrorErrorError(NHoras_Descanso);
-
-			Drivers.at(RetIDDrivers(tempCondutor.getId)).setMinRestTime = NHoras_Descanso;
+			Drivers.at(RetIDDrivers(tempid)).setMinRestTime(NHoras_Descanso);
 			"\n========================================================================================================\n";
 			cout << "Horas de descanso alteradas! Retornando ao Menu Principal...\n";
 			"========================================================================================================\n";
@@ -646,7 +654,7 @@ void LinesStops()
 }
 
 //Functions that deal with the verification of the index of the corresponding vector
-int RetIDLines(int id) {
+int RetIDLines(unsigned int id) {
 	for (unsigned int i = 0; i < Lines.size(); i++) {
 		if (Lines.at(i).getId == id) {
 			return i;
@@ -654,7 +662,7 @@ int RetIDLines(int id) {
 	}
 	return -1;
 }
-int RetIDDrivers(int id) {
+int RetIDDrivers(unsigned int id) {
 	for (unsigned int i = 0; i < Drivers.size(); i++) {
 		if (Drivers.at(i).getId == id) {
 			return i;
@@ -666,6 +674,14 @@ int RetIDDrivers(int id) {
 //MENUS MENUS MENUS
 //Functions that deal w/Invalid Inputs in the Main Menu & the remaining ones of the company
 void ErrorErrorError(int &i) {
+	while (cin.fail()) {
+		cout << "Introduziu uma resposta errada, introduza novamente. ";
+		cin.clear();
+		cin.ignore(1000, '\n');
+		cin >> i;
+	}
+}
+void ErrorErrorError(unsigned int &i) {
 	while (cin.fail()) {
 		cout << "Introduziu uma resposta errada, introduza novamente. ";
 		cin.clear();
@@ -705,9 +721,9 @@ void InvalidInputFile()
 		streamsLinhasECondutores();
 	}
 }
-int CheckIDLines(int id) {
+int CheckIDLines(unsigned int id) {
 	int flag = 0;
-	int newid;
+	unsigned int newid;
 	for (unsigned int i = 0; i < Lines.size(); i++) {
 		if (Lines.at(i).getId == id) {
 			flag = 1;
@@ -722,9 +738,9 @@ int CheckIDLines(int id) {
 		return -1;
 	}
 }
-int CheckIDDrivers(int id) {
+int CheckIDDrivers(unsigned int id) {
 	int flag = 0;
-	int newid;
+	unsigned int newid;
 	for (unsigned int i = 0; i < Drivers.size(); i++) {
 		if (Drivers.at(i).getId == id) {
 			flag = 1;
