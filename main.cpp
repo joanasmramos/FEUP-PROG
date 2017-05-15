@@ -38,7 +38,8 @@ void SeeExistingDrivers();
 void LinesStops();
 void CalcTimeStops();
 void BusMenu();
-//void BusInformation();
+void nrBusCalculation();
+//void BusesDistribution();
 //void BusWithNoDriver();
 void streamsLinesDrivers();
 void SaveFileLines();
@@ -52,7 +53,7 @@ int Commas(string stringe);
 //NOTAS PARA O TRABALHO:
 // FALTA FUNÇÃO PARA SABER TRABALHO DO CONDUTOR (EM QUE SE MOSTRA OS SHIFTS DIARIOS DELE)
 //4. Visualizar o trabalho atribuído a um condutor;
-//5. Visualizar a informação de um autocarro;
+//5. Visualizar a informação de um autocarro; (Joana is taking care of it
 
 //VECTORS
 vector <Driver> Drivers;
@@ -200,7 +201,7 @@ void ScheduleStops() {
 	int minutos = 0;
 	int input = -1;
 	while (true) {
-		cout <<"========================================================================================================\n";
+		cout << "========================================================================================================\n";
 		cout << "Introduza o ID da linha que deseja: ";
 		cin >> id;
 
@@ -263,9 +264,9 @@ void ScheduleStops() {
 			minutos = minutos - 60;
 			horas = horas + 1;
 		}
-		cout <<"========================================================================================================\n";
-		cout << horas << ":" << setfill('0') << setw(2) << minutos << "   " << Lines.at(indice).getId()<< endl;
-		cout <<"========================================================================================================\n";
+		cout << "========================================================================================================\n";
+		cout << horas << ":" << setfill('0') << setw(2) << minutos << "   " << Lines.at(indice).getId() << endl;
+		cout << "========================================================================================================\n";
 	}
 	cout << "Prima 0 para retornar ao Menu Principal...\n";
 	cin >> input;
@@ -292,7 +293,7 @@ void ScheduleLines() {
 			cin.ignore(100000, '\n');
 		}
 		else {
-			
+
 			for (unsigned int i = 0; i < Lines.size(); i++) {
 				if (Lines.at(i).getId() == id) {
 					flag = 1;
@@ -702,6 +703,27 @@ void LinesStops()
 		MenuPrincipal();
 	cout << "========================================================================================================\n";
 }
+void nrBusCalculation() {
+	unsigned int tempid;
+	int exit;
+	Line templine;
+
+	cout << "========================================================================================================\n";
+	cout << "Insira o ID da linha que pretende pesquisar:\n";
+	do {
+		cin >> tempid;
+		ErrorErrorError(tempid);
+		CheckIDLines(tempid);
+	} while (CheckIDLines(tempid) == -1);
+
+	cout << "Para esta linha, sao necessarios " << Lines.at(RetIDLines(tempid)).nrBuses() << " autocarros.";
+	cout << "\n========================================================================================================\n";
+	cout << "\n\n Insira o numero 0 para voltar ao menu principal...\n\n";
+	cin >> exit;
+	ErrorErrorError(exit);
+	MenuPrincipal();
+	cout << "========================================================================================================\n\n";
+}
 
 //Functions that deal with the verification of the index of the corresponding vector
 int RetIDLines(unsigned int id) {
@@ -852,6 +874,7 @@ void BusMenu() {
 	cout << "Insira a sua opcao (1,2,...)\n";
 	cout << "1) Visualizar a informacao de um Autocarro\n";
 	cout << "2) Periodos de Autocarros sem condutor atribuido\n";
+	cout << "3) Numero de Autocarros necessarios para viagens\n";
 	cout << "0) Menu Principal\n";
 	cout << "========================================================================================================\n\n";
 	while (!cin.fail()) {
@@ -861,10 +884,13 @@ void BusMenu() {
 			MenuPrincipal();
 			break;
 		case 1:
-			//BusInformation();
+			//BusesDistribution(); inicializar variaveis e cout
 			break;
 		case 2:
 			//BusWithNoDriver();
+			break;
+		case 3:
+			nrBusCalculation();
 			break;
 
 			//in case of wrong input
