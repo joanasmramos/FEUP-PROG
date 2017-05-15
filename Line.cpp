@@ -72,7 +72,7 @@ unsigned int Line::nrBuses() const {
 	int nrbuses = 0; 
 	for (unsigned int i = 0; i < timesList.size(); i++)
 	{
-		totalTime = totalTime + timeslist.at(i);
+		totalTime = totalTime + timesList.at(i);
 	}
 	//rigth now totalTime contains only the time to reach the destination, so we have to double it to include the time it takes to come back
 	totalTime = 2 * totalTime;

@@ -1,4 +1,6 @@
 #include "Driver.h"
+#include "Company.h"
+
 
 Driver::Driver(string line){
 	id = stoi(line.substr(0, line.find(';')));
@@ -11,6 +13,7 @@ Driver::Driver(string line){
 	line = line.substr(line.find(';') + 2);
 	minRestTime = stoi(line);
 }
+Driver::Driver() {}
 
 //////////////
 // get methods
@@ -63,3 +66,7 @@ void Driver::setMaxWeekWorkingTime(unsigned int maxWeekWorkingTime) {
 void Driver::setMinRestTime(unsigned int minRestTime) {
 	this->minRestTime = minRestTime;
 }
+
+//////////////
+// other methods
+//////////////
