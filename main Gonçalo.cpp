@@ -51,7 +51,6 @@ int Commas(string stringe);
 
 //NOTAS PARA O TRABALHO:
 // FALTA FUNÇÃO PARA SABER TRABALHO DO CONDUTOR (EM QUE SE MOSTRA OS SHIFTS DIARIOS DELE)
-// NUMERO DE AUTOCARROS NECESSÁRIOS (CRIAR MENU) - i got dis
 //4. Visualizar o trabalho atribuído a um condutor;
 //5. Visualizar a informação de um autocarro;
 
@@ -1006,7 +1005,7 @@ void MenuPrincipal() {
 	cout << " 1) Gestao de Linhas.\n";
 	cout << " 2) Gestao de Condutores.\n";
 	cout << " 3) Gestao de Autocarros.                                __________________\n";
-	cout << " 3) Gravar Ficheiro.                                    |            TM  D \\\n";
+	cout << " 4) Gravar Ficheiro.                                    |            TM  D \\\n";
 	cout << " 0) Terminar programa.                                  |SEMPRARROLAR||    |\n";
 	cout << "                                                   ooo0O|_ (o) ______|| (o)/\n";
 	cout << "========================================================================================================\n\n";
