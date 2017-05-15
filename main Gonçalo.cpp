@@ -37,6 +37,9 @@ void SeeExistingStops();
 void SeeExistingDrivers();
 void LinesStops();
 void CalcTimeStops();
+void BusMenu();
+//void BusInformation();
+//void BusWithNoDriver();
 void streamsLinesDrivers();
 void SaveFileLines();
 void SaveFileDrivers();
@@ -49,6 +52,8 @@ int Commas(string stringe);
 //NOTAS PARA O TRABALHO:
 // FALTA FUNÇÃO PARA SABER TRABALHO DO CONDUTOR (EM QUE SE MOSTRA OS SHIFTS DIARIOS DELE)
 // NUMERO DE AUTOCARROS NECESSÁRIOS (CRIAR MENU) - i got dis
+//4. Visualizar o trabalho atribuído a um condutor;
+//5. Visualizar a informação de um autocarro;
 
 //VECTORS
 vector <Driver> Drivers;
@@ -117,9 +122,9 @@ void SaveFileLines() {
 	MenuPrincipal();
 }
 
-//FUNÇÕES DE RECEÇÃO DE INFORMAÇÃO QUE FOI DADA POR INPUT PELO UTILIZADOR (LINES & DRIVERS)
+//FUNCTIONS THAT RECEIVE INFORMATION GIVEN BY THE USER THROUGH HIS INPUT(LINES & DRIVERS)
 void streamsLinesDrivers() {
-	//criar um vetor temporário, que irá ler a informação do ficheiro pretendido, e depositá-lo em formato de string
+	//temporary vector, that will read the information of the pretended file and deposit all in the form of a string
 	vector<string> input;
 	cin.clear();
 	input.clear();
@@ -541,7 +546,7 @@ void ChangeDriverMenu() {
 	}
 }
 
-//CALCULA A DISTANCIA ENTRE 2 PARAGENS
+//CALCULATES THE DISTANCE BETWEEN 2 STOPS
 void CalcTimeStops() {
 	int exit;
 	exit = -1;
@@ -830,10 +835,46 @@ void Schedule() {
 		case 2:
 			ScheduleStops();
 			break;
+
+			//in case of wrong input
+		default:
+			InvalidInputMenu();
+			break;
 		}
 	}
 }
+//MENU
+//Function for managing Buses
+void BusMenu() {
+	int options;
+	options = -1;;
+	cout << "========================================================================================================";
+	cout << "\nGESTAO DE AUTOCARROS \n";
+	cout << "Insira a sua opcao (1,2,...)\n";
+	cout << "1) Visualizar a informacao de um Autocarro\n";
+	cout << "2) Periodos de Autocarros sem condutor atribuido\n";
+	cout << "0) Menu Principal\n";
+	cout << "========================================================================================================\n\n";
+	while (!cin.fail()) {
+		cin >> options;
+		switch (options) {
+		case 0:
+			MenuPrincipal();
+			break;
+		case 1:
+			//BusInformation();
+			break;
+		case 2:
+			//BusWithNoDriver();
+			break;
 
+			//in case of wrong input
+		default:
+			InvalidInputMenu();
+			break;
+		}
+	}
+}
 //MENU
 //Function for managing Lines
 void LineManagment() {
@@ -899,7 +940,6 @@ void DriverManagment() {
 	cout << "4) Ver Condutores existentes\n";
 	cout << "0) Menu Principal\n";
 	cout << "========================================================================================================\n\n";
-	//cenas cenas cena
 	while (!cin.fail()) {
 		cin >> options;
 		switch (options) {
@@ -964,8 +1004,9 @@ void MenuPrincipal() {
 	cout << " \nBem-Vindo ao Menu Principal do programa Escalonamento de Condutores, da Empresa de Transportes Semprarrolar.\n";
 	cout << " Por favor escolha um numero como opcao. \n";
 	cout << " 1) Gestao de Linhas.\n";
-	cout << " 2) Gestao de Condutores.                                __________________\n";
-	cout << " 3) Gravar Ficheiro                                     |            TM  D \\\n";
+	cout << " 2) Gestao de Condutores.\n";
+	cout << " 3) Gestao de Autocarros.                                __________________\n";
+	cout << " 3) Gravar Ficheiro.                                    |            TM  D \\\n";
 	cout << " 0) Terminar programa.                                  |SEMPRARROLAR||    |\n";
 	cout << "                                                   ooo0O|_ (o) ______|| (o)/\n";
 	cout << "========================================================================================================\n\n";
@@ -994,6 +1035,8 @@ void MenuPrincipal() {
 			DriverManagment();
 			break;
 		case 3:
+			BusMenu();
+		case 4:
 			SaveFileMenu();
 			break;
 		default:
