@@ -37,11 +37,9 @@ void SeeExistingStops();
 void SeeExistingDrivers();
 void LinesStops();
 void CalcTimeStops();
-void streamsLinhasECondutores();
+void streamsLinesDrivers();
 void SaveFileLines();
 void SaveFileDrivers();
-void OpenDrivers();
-void OpenLines();
 int RetIDDrivers(unsigned int id);
 int RetIDLines(unsigned int id);
 int CheckIDLines(unsigned int id);
@@ -50,8 +48,6 @@ int Commas(string stringe);
 
 //NOTAS PARA O TRABALHO:
 // FALTA FUNÇÃO PARA SABER TRABALHO DO CONDUTOR (EM QUE SE MOSTRA OS SHIFTS DIARIOS DELE)
-// REVER ADD,REMOVE,CHANGE DRIVER -------- JÁ REVI TUDO E EM PRINCÍPIO JÁ ESTÁ BEM
-// COMO INICIALIZAR A MAIN (inicializar os ficheiros de texto - company) -------- NÃO PERCEBI
 // NUMERO DE AUTOCARROS NECESSÁRIOS (CRIAR MENU) - i got dis
 
 //VECTORS
@@ -59,90 +55,6 @@ vector <Driver> Drivers;
 vector <Line> Lines;
 
 //FILES
-//FICHEIROS
-void OpenDrivers()
-{
-	string nome_f, line;
-	ifstream f_condutores;
-	Driver driver;
-
-	cout << "Introduza o nome do ficheiro de condutores: ";
-	cin >> nome_f;
-	f_condutores.open(nome_f);
-
-	while (f_condutores.fail())
-	{
-		cout << "ERRO: nao abriu o ficheiro de condutores" << endl;
-		cout << "Introduza de novo o ficheiro de condutores: ";
-		cin >> nome_f;
-		f_condutores.open(nome_f);
-	}
-
-	while (!f_condutores.eof())
-	{
-		getline(f_condutores, line);
-		driver.setId(stoi(line.substr(0, line.find(';'))));
-		line = line.substr(line.find(';') + 2);
-		driver.setName(line.substr(0, line.find(';') - 1));
-		line = line.substr(line.find(';') + 2);
-		driver.setMaxHours(stoi(line.substr(0, line.find(';'))));
-		line = line.substr(line.find(';') + 2);
-		driver.setMaxWeekWorkingTime(stoi(line.substr(0, line.find(';'))));
-		line = line.substr(line.find(';') + 2);
-		driver.setMinRestTime(stoi(line));
-
-		Drivers.push_back(driver);
-	}
-
-	f_condutores.close();
-}
-void OpenLines()
-{
-	string nome_f, line;
-	ifstream f_linhas;
-
-	cout << "Introduza o nome do ficheiro de linhas: ";
-	cin >> nome_f;
-	f_linhas.open(nome_f);
-
-	while (f_linhas.fail())
-	{
-		cout << "ERRO: nao abriu o ficheiro de linhas" << endl;
-		cout << "Introduza de novo o ficheiro de linhas: ";
-		cin >> nome_f;
-		f_linhas.open(nome_f);
-	}
-
-	while (!f_linhas.eof())
-	{
-		Line l1;
-
-		getline(f_linhas, line);
-
-		l1.setID(stoi(line.substr(0, line.find(';'))));
-		line = line.substr(line.find(';') + 2);
-		l1.setFreq(stoi(line.substr(0, line.find(';'))));
-		line = line.substr(line.find(';') + 2);
-
-		while (line.find(',') < line.find(';'))
-		{
-			l1.getBusStops().push_back(line.substr(0, line.find(',')));
-			line = line.substr(line.find(',') + 2);
-		}
-		l1.getBusStops().push_back(line.substr(0, line.find(';')));
-		line = line.substr(line.find(';') + 2);
-
-		for (unsigned int i = 1; i < l1.getBusStops().size(); i++)
-		{
-			l1.getTimings().push_back(stoi(line.substr(0, line.find(','))));
-			line = line.substr(line.find(',') + 2);
-		}
-
-		Lines.push_back(l1);
-	}
-
-	f_linhas.close();
-}
 void SaveFileDrivers() {
 	string FicheiroCondutor;
 	"========================================================================================================\n";
@@ -206,7 +118,7 @@ void SaveFileLines() {
 }
 
 //FUNÇÕES DE RECEÇÃO DE INFORMAÇÃO QUE FOI DADA POR INPUT PELO UTILIZADOR (LINES & DRIVERS)
-void streamsLinhasECondutores() {
+void streamsLinesDrivers() {
 	//criar um vetor temporário, que irá ler a informação do ficheiro pretendido, e depositá-lo em formato de string
 	vector<string> input;
 	cin.clear();
@@ -219,9 +131,59 @@ void streamsLinhasECondutores() {
 	cout << "  <___|___|_|_|_|_| |_\\_|_|_|_\\_|_\\_`___|___|_|_|_\\_\\ " << endl;
 	cout << "========================================================================================================\n\n";
 
+	//Drivers file
 
-	OpenDrivers();
-	OpenLines();
+	string name_f1, lined;
+	ifstream drivers_f;
+
+	cout << "Introduza o nome do ficheiro de condutores: ";
+	cin >> name_f1;
+	drivers_f.open(name_f1);
+
+	while (drivers_f.fail())
+	{
+		cout << "ERRO: nao abriu o ficheiro de condutores" << endl;
+		cout << "Introduza de novo o ficheiro de condutores: ";
+		cin >> name_f1;
+		drivers_f.open(name_f1);
+	}
+
+	while (!drivers_f.eof())
+	{
+		getline(drivers_f, lined);
+		Driver driver1(lined);
+		Drivers.push_back(driver1);
+	}
+
+	drivers_f.close();
+
+
+	//Lines Files
+	string name_f;
+	string linel;
+	ifstream lines_f;
+
+	cout << "Introduza o nome do ficheiro de linhas: ";
+	cin >> name_f;
+	lines_f.open(name_f);
+
+	while (lines_f.fail())
+	{
+		cout << "ERRO: nao abriu o ficheiro de linhas" << endl;
+		cout << "Introduza de novo o ficheiro de linhas: ";
+		cin >> name_f;
+		lines_f.open(name_f);
+	}
+
+	while (!lines_f.eof())
+	{
+		getline(lines_f, linel);
+		Line line1(linel);
+		Lines.push_back(line1);
+	}
+
+	lines_f.close();
+
 }
 
 //Functions for the analysis of Schedules
@@ -797,12 +759,12 @@ void InvalidInputFile()
 	{
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		streamsLinhasECondutores();
+		streamsLinesDrivers();
 	}
 	else
 	{
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		streamsLinhasECondutores();
+		streamsLinesDrivers();
 	}
 }
 int CheckIDLines(unsigned int id) {
@@ -1061,7 +1023,7 @@ int Commas(string stringe) {
 //MAIN
 int main() {
 
-	streamsLinhasECondutores();
+	streamsLinesDrivers();
 	MenuPrincipal();
 
 	system("PAUSE");

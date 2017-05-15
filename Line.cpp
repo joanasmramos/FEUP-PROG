@@ -1,7 +1,7 @@
 #include "Line.h"
 
 
-Line::Line(string textLine){
+Line::Line(string textLine) {
 
 	id_line = stoi(textLine.substr(0, textLine.find(';')));
 	textLine = textLine.substr(textLine.find(';') + 2);

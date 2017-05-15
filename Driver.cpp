@@ -2,7 +2,7 @@
 #include "Company.h"
 
 
-Driver::Driver(string line){
+Driver::Driver(string line) {
 	id = stoi(line.substr(0, line.find(';')));
 	line = line.substr(line.find(';') + 2);
 	name = line.substr(0, line.find(';') - 1);
