@@ -1,6 +1,6 @@
 /*LABORATÓRIO DE SISTEMAS OPERATIVOS - PARTE 2 DO PROJETO DE PROG 2016/2017 */
+//Gonçalo Nuno Bernardo e Joana Sofia Ramos
 
-/*   P R O J E T O   1   */
 
 #include <iostream> // I/O reasoning
 #include <vector> //For use of vectors
@@ -36,7 +36,8 @@ void SeeExistingLines();
 void SeeExistingStops();
 void SeeExistingDrivers();
 void LinesStops();
-void CalcTimeStops();
+//void CalcTimeStops();
+void ROUTES();
 void BusMenu();
 void nrBusCalculation();
 //void BusesDistribution();
@@ -49,12 +50,6 @@ int RetIDLines(unsigned int id);
 int CheckIDLines(unsigned int id);
 int CheckIDDrivers(unsigned int id);
 int Commas(string stringe);
-
-//NOTAS PARA O TRABALHO:
-// FALTA FUNÇÃO PARA SABER TRABALHO DO CONDUTOR (EM QUE SE MOSTRA OS SHIFTS DIARIOS DELE)
-//4. Visualizar o trabalho atribuído a um condutor;
-//5. Visualizar a informação de um autocarro; (Joana is taking care of it
-//6. Calculo de paragens BEM FEITO
 
 //VECTORS
 vector <Driver> Drivers;
@@ -124,7 +119,7 @@ void SaveFileLines() {
 }
 
 //FUNCTIONS THAT RECEIVE INFORMATION GIVEN BY THE USER THROUGH HIS INPUT(LINES & DRIVERS)
-void BusesDistribution() {
+/*void BusesDistribution() {
 	for (unsigned int i = 0; i < Lines.size(); i++) {
 		for (unsigned int j = 1; j <= Lines.at(i).nrBuses(); j++) {
 			Lines.at(i).getBuses().at(j - 1).setOrderInLine(j);
@@ -153,7 +148,7 @@ void BusesDistribution() {
 			}
 		}
 	}
-}
+} */
 void streamsLinesDrivers() {
 	//temporary vector, that will read the information of the pretended file and deposit all in the form of a string
 	vector<string> input;
@@ -220,7 +215,7 @@ void streamsLinesDrivers() {
 
 	lines_f.close();
 
-	BusesDistribution();
+	//BusesDistribution();
 }
 
 //Functions for the analysis of Schedules
@@ -579,57 +574,273 @@ void ChangeDriverMenu() {
 }
 
 //CALCULATES THE DISTANCE BETWEEN 2 STOPS
-void CalcTimeStops() {
+void ROUTES()
+{
 	int exit;
-	exit = -1;
-	string parg1, parg2;
-	cout << "========================================================================================================\n";
-	cout << "Introduza a primeira paragem que deseja: " << endl;
-	cin >> parg1;
-	cout << "Introduza a segunda paragem que deseja" << endl;
-	cin >> parg2;
-
-	for (unsigned int i = 0; i < Lines.size(); i++)
+	int indexLine;
+	int indexStop1;
+	int indexStop2;
+	int nTiming;
+	int min = 0;
+	string stop1, stop2;
+	vector<string> vecStop1, vecStop2; 
+	//A vector of lines where the stop is met
+	do
 	{
-		int par1 = 0;
-		int par2 = 0;
-		for (unsigned int j = 0; j < Lines.at(i).getBusStops().size(); j++)
-		{
-			if (Lines.at(i).getBusStops().at(j) == parg1)
-			{
-				par1 = j;
-			}
-
-			if (Lines.at(i).getBusStops().at(j) == parg2)
-			{
-				par2 = j;
+		cout << "========================================================================================================\n";
+		cout << "Introduza a primeira paragem que deseja: " << endl;
+		getline(cin, stop1);
+		for (unsigned int i1 = 0; i1 < Lines.size(); i1++){
+			for (unsigned int i2 = 0; i2 < Lines.at(i1).getBusStops().size(); i2++){
+				if (Lines.at(i1).getBusStops().at(i2).compare(stop1) == 0){
+					vecStop1.push_back(to_string(Lines.at(i1).getId()));
+				}
 			}
 		}
-		if (par1 != -1 && par2 != -1) //Lines.at(i) has the 2 stops!!
-		{
+		if (vecStop1.size() == 0){
+			cout << "A paragem não se encontra em nenhuma linha. Volte a introduzir." << endl;
+		}
+	} while (vecStop1.size() == 0);
 
-			if (par1 > par2)
+	do{
+		cout << "Introduza a segunda paragem que deseja" << endl;
+		getline(cin, stop2);
+
+		for (unsigned int i1 = 0; i1 < Lines.size(); i1++){
+			for (int i2 = 0; i2 < Lines.at(i1).getBusStops().size(); i2++){
+				if (Lines.at(i1).getBusStops().at(i2).compare(stop2) == 0){
+					vecStop2.push_back(to_string(Lines.at(i1).getId()));
+				}
+			}
+		}
+		if (vecStop2.size() == 0){
+			cout << "A paragem não se encontra em nenhuma linha. Volte a introduzir." << endl;
+		}
+	} while (vecStop2.size() == 0);
+
+	vector<string> CommonStops;
+	bool SameLine = false;
+	for (int v1 = 0; v1 < vecStop1.size(); v1++)
+	{
+		for (int v2 = 0; v2 < vecStop2.size(); v2++)
+		{
+			if (vecStop1.at(v1) == vecStop2.at(v2))
 			{
-				cout << "========================================================================================================\n";
-				cout << "SENTIDO: " << Lines.at(i).getBusStops().at(0); //Unidirectional
+				SameLine = true;
+				CommonStops.push_back(vecStop1.at(v1));
+			}
+		}
+	}
+
+	if (SameLine) //If the stops are in the same line.
+	{
+		for (int line = 0; line < Lines.size(); line++)
+		{
+			if (to_string(Lines.at(line).getId()) == CommonStops.at(0))
+			{
+				indexLine = line;
+			}
+		}
+		for (int stop = 0; stop < Lines.at(indexLine).getBusStops().size(); stop++){
+			if (Lines.at(indexLine).getBusStops().at(stop) == stop1){
+				indexStop1 = stop;
+			}
+			if (Lines.at(indexLine).getBusStops().at(stop) == stop2){
+				indexStop2 = stop;
+			}
+		}
+
+		if (indexStop1 < indexStop2){ //FRONT TO BACK, BACK TO FRONT
+			nTiming = indexStop2 - indexStop1;
+		}
+		else{
+			nTiming = indexStop1 - indexStop2;
+
+		}
+
+		if (indexStop1 < indexStop2){
+			for (int i = 0; i < nTiming; i++){
+				min = min + stoi(to_string(Lines.at(indexLine).gettimeBetweenStops().at(indexStop1 + i)));
+			}
+		}
+		else{
+			for (int i = 0; i < nTiming; i++){
+				min = min + stoi(to_string(Lines.at(indexLine).gettimeBetweenStops().at(indexStop2 + i)));
+			}
+		}
+		cout << "========================================================================================================\n";
+		cout << "SENTIDO: \n";
+		if (indexStop1 < indexStop2){
+			for (int i = indexStop1; i < indexStop2 + 1; i++){
+				if (i != indexStop2){
+					cout << Lines.at(indexLine).getBusStops().at(i) << " || ";
+				}
+				else
+					cout << Lines.at(indexLine).getBusStops().at(i)<< endl;
+			}
+		}
+		else{
+			for (int i = indexStop1; i >= indexStop2; i--){
+				if (i != indexStop2){
+					cout << Lines.at(indexLine).getBusStops().at(i) << " || ";
+				}
+				else
+					cout << Lines.at(indexLine).getBusStops().at(i) << endl;
+			}
+		}
+
+		cout << "O tempo de viagem entre " << Lines.at(indexLine).getBusStops().at(indexStop1) << " e " << Lines.at(indexLine).getBusStops().at(indexStop2) << " e de " << min << " minutos.";
+		cout << "========================================================================================================\n\n";
+		cout << "\n Insira o numero 0 para voltar ao menu principal...\n";
+		cin >> exit;
+		ErrorErrorError(exit);
+		MenuPrincipal();
+		cout << "========================================================================================================\n\n";
+	}
+	else
+	{
+		//Not a possible connection
+		int indexLinha1, indexLinha2, indexParagem1, indexParagem2;
+		for (int linha = 0; linha < Lines.size(); linha++)
+		{
+			if(to_string(Lines.at(linha).getId()) == vecStop1.at(0))
+			{
+				indexLinha1 = linha;
+			}
+		}
+		for (int linha = 0; linha < Lines.size(); linha++){
+			if (to_string(Lines.at(linha).getId()) == vecStop2.at(0)){
+				indexLinha2 = linha;
+			}
+		}
+		for (int stop = 0; stop < Lines.at(indexLinha1).getBusStops().size(); stop++){
+			if (Lines.at(indexLinha1).getBusStops().at(stop) == stop1){
+				indexParagem1 = stop;
+			}
+		}
+
+		for (int stop = 0; stop < Lines.at(indexLinha2).getBusStops().size(); stop++){
+			if (Lines.at(indexLinha2).getBusStops().at(stop) == stop2){
+				indexParagem2 = stop;
+			}
+		}
+
+		//Is there a common stop?
+		bool CommonStopExisting = false;
+		int CommonLine1, CommonLine2;
+
+		for (int i1 = 0; i1 < Lines.at(indexLinha1).getBusStops().size(); i1++){
+			for (int i2 = 0; i2 < Lines.at(indexLinha2).getBusStops().size(); i2++){
+				if (Lines.at(indexLinha1).getBusStops().at(i1).compare(Lines.at(indexLinha2).getBusStops().at(i2)) == 0){
+					CommonStopExisting = true;
+					CommonLine1 = i1;
+					CommonLine2 = i2;
+				}
+			}
+		}
+
+		int nTimes1, nTimes2;
+		int min1 = 0, min2 = 0, FinalMin = 0;
+
+		if (!CommonStopExisting)
+			cout << endl << "Nao ha ligacao entre as duas paragens" << endl << endl;
+
+		else{
+			//Calculating minutes from first line
+			if (indexParagem1 < CommonLine1){
+				nTimes1 = CommonLine1 - indexParagem1;
+			}
+			else{
+				nTimes1 = indexParagem1 - CommonLine1;
 			}
 
+			if (indexParagem1 < CommonLine1){
+				for (int i = 0; i < nTimes1; i++){
+					min1 = min + stoi(to_string(Lines.at(indexLinha1).gettimeBetweenStops().at(indexParagem1 + i)));
+				}
+			}
+			else{
+				for (int i = 0; i < nTimes1; i++){
+					min1 = min1 + stoi(to_string(Lines.at(indexLinha1).gettimeBetweenStops().at(CommonLine1 + i)));
+				}
+			}
+			//Calculating second trip
+			if (indexParagem2 < CommonLine2){
+				nTimes2 = CommonLine2 - indexParagem2;
+			}
+
+			else {
+				nTimes2 = indexParagem2 - CommonLine2;
+			}
+			if (indexParagem2 < CommonLine2)
+			{
+				for (int i = 0; i < nTimes2; i++)
+				{
+					min2 = min2 + stoi(to_string(Lines.at(indexLinha2).gettimeBetweenStops().at(indexParagem2 + i)));
+				}
+			}
 			else
 			{
-				cout << "========================================================================================================\n";
-				cout << "SENTIDO: " << Lines.at(i).getBusStops().at(Lines.at(i).getBusStops().size() - 1); //Coming back
-
+				for (int i = 0; i < nTimes2; i++)
+				{
+					min2 = min2 + stoi(to_string(Lines.at(indexLinha2).gettimeBetweenStops().at(CommonLine2 + i)));
+				}
 			}
-			int tempo = 0;
-			for (int k = (par1 > par2 ? par2 : par1); k < (par1 < par2 ? par2 : par1); k++) // Iterating of the smallest pair to the biggest, being k the position in the time vector
+
+			FinalMin = min1 + min2;
+
+			cout << "========================================================================================================\n";
+			cout << "SENTIDO: \n";
+
+			if (indexParagem1 < CommonLine1){
+				for (int i = indexParagem1; i < CommonLine1 + 1; i++){
+					if (i != CommonLine1){
+						cout << Lines.at(indexLinha1).getBusStops().at(i) << " || ";
+					}
+					else
+						cout << Lines.at(indexLinha1).getBusStops().at(i);
+				}
+			}
+			else {
+				for (int i = indexParagem1; i >= CommonLine1; i--){
+					if (i != CommonLine1){
+						cout << Lines.at(indexLinha1).getBusStops().at(i) << " || ";
+					}
+					else
+						cout << Lines.at(indexLinha1).getBusStops().at(i);
+				}
+			}
+
+			cout << "\n MUDANCA DE LINHA: " << Lines.at(indexLinha1).getId() << " para a linha " << Lines.at(indexLinha2).getId() << " || || ";
+
+			if (indexParagem2 < CommonLine2)
 			{
-				tempo += Lines.at(i).getTimings().at(k);
+				for (int i = CommonLine2; i >= indexParagem2; i--)
+				{
+					if (i != indexParagem2)
+					{
+						cout << Lines.at(indexLinha2).getBusStops().at(i) << " || ";
+					}
+					else
+						cout << Lines.at(indexLinha2).getBusStops().at(i) << endl;
+				}
+			}
+			else
+			{
+				for (int i = CommonLine2; i <= indexParagem2; i++)
+				{
+					if (i != indexParagem2)
+					{
+						cout << Lines.at(indexLinha2).getBusStops().at(i) << " || ";
+					}
+					else
+						cout << Lines.at(indexLinha2).getBusStops().at(i) << endl;
+				}
 			}
 
-			cout << endl;
-			cout << "TEMPO DA VIAGEM:  " << tempo << " MINUTOS";
-			cout << "\n\n========================================================================================================\n";
-			cout << "\n\n Insira o numero 0 para voltar ao menu principal...\n\n";
+			cout << "O tempo de viagem entre " << Lines.at(indexLinha1).getBusStops().at(indexParagem1) << " e " << Lines.at(indexLinha2).getBusStops().at(indexParagem2) << " e de " << FinalMin << " minutos.";
+			cout << "========================================================================================================\n\n";
+			cout << "\n Insira o numero 0 para voltar ao menu principal...\n";
 			cin >> exit;
 			ErrorErrorError(exit);
 			MenuPrincipal();
@@ -972,7 +1183,7 @@ void LineManagment() {
 			//in case of wrong input
 
 		case 5:
-			CalcTimeStops();
+			ROUTES();
 			break;
 
 			//in case of wrong input

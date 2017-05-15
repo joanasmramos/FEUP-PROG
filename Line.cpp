@@ -48,6 +48,10 @@ vector<Bus> Line::getBuses() const {
 	return Buses;
 }
 
+vector<int> Line::gettimeBetweenStops() const {
+	return timesList;
+}
+
 ////////////////
 // set methods
 ////////////////

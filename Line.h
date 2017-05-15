@@ -26,6 +26,7 @@ public:
 	vector<int> getTimings() const;
 	unsigned int getFreq() const;
 	vector<Bus> getBuses() const;
+	vector<int> gettimeBetweenStops() const;
 
 	// set methods
 	void setID(unsigned int id);
@@ -34,5 +35,5 @@ public:
 	void setTimings(vector<int> timings);
 
 	// other methods
-	unsigned int nrBuses() const; // computes de number of buses needed for one line
+	unsigned int nrBuses() const; // computes the number of buses needed for one line
 };
