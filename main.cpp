@@ -560,7 +560,7 @@ void ROUTES()
 	{
 		cout << "========================================================================================================\n";
 		cout << "Introduza a primeira paragem que deseja: " << endl;
-		cin.ignore(3000, '\n');
+
 		getline(cin, stop1);
 		for (unsigned int i1 = 0; i1 < Lines.size(); i1++){
 			for (unsigned int i2 = 0; i2 < Lines.at(i1).getBusStops().size(); i2++){
@@ -576,7 +576,6 @@ void ROUTES()
 
 	do{
 		cout << "Introduza a segunda paragem que deseja" << endl;
-		cin.ignore(3000, '\n');
 		getline(cin, stop2);
 
 		for (unsigned int i1 = 0; i1 < Lines.size(); i1++){
@@ -784,7 +783,7 @@ void ROUTES()
 				}
 			}
 
-			cout << "\n MUDANCA DE LINHA: " << Lines.at(indexLinha1).getId() << " para a linha " << Lines.at(indexLinha2).getId() << " || || ";
+			cout << "\n MUDANCA DE LINHA: " << Lines.at(indexLinha1).getId() << " para a linha " << Lines.at(indexLinha2).getId() << "  /\ ";
 
 			if (indexParagem2 < CommonLine2)
 			{
@@ -945,6 +944,7 @@ void nrBusCalculation() {
 void DriversShifts() {
 	unsigned int mins;
 	unsigned int id;
+	cout << "========================================================================================================\n";
 	cout << "Insira o ID do motorista que quer consultar:\n";
 	do {
 		cin >> id;
@@ -974,6 +974,7 @@ void DriversShifts() {
 		mins = Drivers.at(RetIDDrivers(id)).getShifts().at(i).getEndTime();
 		cout << hrs2min(mins) << ":" << setfill('0') << setw(2);
 		cout << mins << endl;
+		cout << "========================================================================================================\n\n";
 	}
 }
 
