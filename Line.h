@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Bus.h"
 
 
 
@@ -14,6 +15,7 @@ private:
 	vector<string> busStopList;
 	vector<int> timesList;
 	unsigned int freq;
+	vector<Bus> Buses;
 
 public:
 	Line();
@@ -23,6 +25,7 @@ public:
 	vector<string> getBusStops() const;
 	vector<int> getTimings() const;
 	unsigned int getFreq() const;
+	vector<Bus> getBuses() const;
 
 	// set methods
 	void setID(unsigned int id);

@@ -41,6 +41,13 @@ void Bus::setLineId(unsigned int line) {
 	lineId = line;
 }
 
+void Bus::setSchedule(unsigned int i, unsigned int startTime, unsigned int endTime) {
+	schedule.at(i).setBusLineId(lineId);
+	schedule.at(i).setBusOrderNumber(orderInLine);
+	schedule.at(i).setStartTime(startTime);
+	schedule.at(i).setEndTime(endTime);
+}
+
 ////////////////////////////
 // other methods
 ///////////////////////////

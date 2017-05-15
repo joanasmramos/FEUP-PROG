@@ -44,6 +44,10 @@ unsigned int Line::getFreq() const {
 	return freq;
 }
 
+vector<Bus> Line::getBuses() const {
+	return Buses;
+}
+
 ////////////////
 // set methods
 ////////////////

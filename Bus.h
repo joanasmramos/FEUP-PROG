@@ -23,6 +23,7 @@ class Bus{
   // set methods
    void setDriverId(unsigned int driver);
    void setLineId(unsigned int line);
+   void setSchedule(unsigned int i, unsigned int startTime, unsigned int endTime);
   // other methods
 
 };

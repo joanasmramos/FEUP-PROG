@@ -54,6 +54,7 @@ int Commas(string stringe);
 // FALTA FUNÇÃO PARA SABER TRABALHO DO CONDUTOR (EM QUE SE MOSTRA OS SHIFTS DIARIOS DELE)
 //4. Visualizar o trabalho atribuído a um condutor;
 //5. Visualizar a informação de um autocarro; (Joana is taking care of it
+//6. Calculo de paragens BEM FEITO
 
 //VECTORS
 vector <Driver> Drivers;
@@ -123,6 +124,36 @@ void SaveFileLines() {
 }
 
 //FUNCTIONS THAT RECEIVE INFORMATION GIVEN BY THE USER THROUGH HIS INPUT(LINES & DRIVERS)
+void BusesDistribution() {
+	for (unsigned int i = 0; i < Lines.size(); i++) {
+		for (unsigned int j = 1; j <= Lines.at(i).nrBuses(); j++) {
+			Lines.at(i).getBuses().at(j - 1).setOrderInLine(j);
+			Lines.at(i).getBuses().at(j - 1).setLineId(Lines.at(i).getId());
+			switch (j) {
+			case 1: {
+				unsigned int end = startime;
+				unsigned int start = startime;
+				while (start <= endtime) {
+					start = start + Lines.at(i).timeIteration();
+				}
+				end = start + Lines.at(i).timeIteration() - 1;
+				Lines.at(i).getBuses().at(j - 1).setSchedule(j - 1, startime, end);
+				break;
+			}
+			default: {
+				unsigned int start = Lines.at(i).getBuses().at(j - 2).getSchedule().at(0).getStartTime();
+				unsigned int acc = start, end = 0;
+				while (acc <= endtime) {
+					acc = acc + Lines.at(i).timeIteration();
+				}
+				end = acc + Lines.at(i).timeIteration() - 1;
+				Lines.at(i).getBuses().at(j - 1).setSchedule(j - 1, start, end);
+				break;
+			}
+			}
+		}
+	}
+}
 void streamsLinesDrivers() {
 	//temporary vector, that will read the information of the pretended file and deposit all in the form of a string
 	vector<string> input;
@@ -189,6 +220,7 @@ void streamsLinesDrivers() {
 
 	lines_f.close();
 
+	BusesDistribution();
 }
 
 //Functions for the analysis of Schedules
