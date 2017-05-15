@@ -133,6 +133,60 @@ void streamsLinhasECondutores() {
 	cout << "  \\__ | _>|     |  _|   |   |   |   | | | |_|   |   /" << endl;
 	cout << "  <___|___|_|_|_|_| |_\\_|_|_|_\\_|_\\_`___|___|_|_|_\\_\\ " << endl;
 	cout << "========================================================================================================\n\n";
+
+	//Drivers file
+
+	string name_f1, lined;
+	ifstream drivers_f;
+
+	cout << "Introduza o nome do ficheiro de condutores: ";
+	cin >> name_f1;
+	drivers_f.open(name_f1);
+
+	while (drivers_f.fail())
+	{
+		cout << "ERRO: nao abriu o ficheiro de condutores" << endl;
+		cout << "Introduza de novo o ficheiro de condutores: ";
+		cin >> name_f1;
+		drivers_f.open(name_f1);
+	}
+
+	while (!drivers_f.eof())
+	{
+		getline(drivers_f, lined);
+		Driver driver1(lined);
+		Drivers.push_back(driver1);
+	}
+
+	drivers_f.close();
+
+
+	//Lines Files
+	string name_f;
+	string linel;
+	ifstream lines_f;
+
+	cout << "Introduza o nome do ficheiro de linhas: ";
+	cin >> name_f;
+	lines_f.open(name_f);
+
+	while (lines_f.fail())
+	{
+		cout << "ERRO: nao abriu o ficheiro de linhas" << endl;
+		cout << "Introduza de novo o ficheiro de linhas: ";
+		cin >> name_f;
+		lines_f.open(name_f);
+	}
+
+	while (!lines_f.eof())
+	{
+		getline(lines_f, linel);
+		Line line1(linel);
+		Lines.push_back(line1);
+	}
+
+	lines_f.close();
+
 }
 
 //Functions for the analysis of Schedules

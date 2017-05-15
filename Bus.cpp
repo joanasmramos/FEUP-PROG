@@ -33,11 +33,11 @@ vector<Shift> schedule;
 //////////////////////////////
 // set methods
 /////////////////////////////
-void Bus::setDriverId(unsigned int driver) const{
+void Bus::setDriverId(unsigned int driver) {
 	driverId = driver;
 }
 
-void Bus::setLineId(unsigned int line) const {
+void Bus::setLineId(unsigned int line) {
 	lineId = line;
 }
 
