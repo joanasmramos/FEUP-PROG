@@ -50,9 +50,7 @@ int Commas(string stringe);
 // FALTA FUNÇÃO PARA SABER TRABALHO DO CONDUTOR (EM QUE SE MOSTRA OS SHIFTS DIARIOS DELE)
 // REVER ADD,REMOVE,CHANGE DRIVER -------- JÁ REVI TUDO E EM PRINCÍPIO JÁ ESTÁ BEM
 // COMO INICIALIZAR A MAIN (inicializar os ficheiros de texto - company) -------- NÃO PERCEBI
-// CLASSE COMPANY TEM AINDA O VETOR DE LINES E DRIVERS -------- JÁ APAGUEI
-// METER FUNÇAÕ DO NR DE BUS --------- SE FOR A QUE ELES DÃO A FÓRMULA JÁ TÁ FEITA NO Line.cpp (other methods)
-
+// NUMERO DE AUTOCARROS NECESSÁRIOS (CRIAR MENU) - i got dis
 
 //VECTORS
 vector <Driver> Drivers;
@@ -174,7 +172,7 @@ void ScheduleStops() {
 
 	cout << "========================================================================================================\n";
 
-	int opcao;
+	unsigned int opcao;
 	for (unsigned int i = 0; i < Lines.at(indice).getBusStops.size(); i++) {
 		cout << i << " - " << Lines.at(indice).getBusStops.at(i) << endl;
 	}
@@ -240,7 +238,7 @@ void ScheduleLines() {
 		}
 		else {
 			
-			for (int i = 0; i < Lines.size(); i++) {
+			for (unsigned int i = 0; i < Lines.size(); i++) {
 				if (Lines.at(i).getId == id) {
 					flag = 1;
 					indice = i;//YAYX2
@@ -299,12 +297,12 @@ void AddDriver() {
 	cin.ignore(1000, '\n');
 	cout << "Indique o nome do motorista:  " << endl;
 	getline(cin, Nome);
-	Drivers.at(RetIDDrivers(tempCondutor.getId)).setName(nome);
+	Drivers.at(RetIDDrivers(tempCondutor.getId)).setName(Nome);
 
 	cout << "Indique o numero máximo de horas do turno do motorista:\n";
 	cin >> tempmaxhours;
 	ErrorErrorError(tempmaxhours);
-	tempCondutor.setMaxHours(tempmaxhours)
+	tempCondutor.setMaxHours(tempmaxhours);
 
 	cout << "Indique o numero de horas semanais do motorista:\n";
 	cin >> tempMaxWeekWorkingTime;
