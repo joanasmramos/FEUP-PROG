@@ -348,7 +348,7 @@ void AddDriver() {
 	cin.ignore(1000, '\n');
 	cout << "Indique o nome do motorista:  " << endl;
 	getline(cin, Nome);
-	Drivers.at(RetIDDrivers(tempCondutor.getId())).setName(Nome);
+	tempCondutor.setName(Nome);
 
 	cout << "Indique o numero máximo de horas do turno do motorista:\n";
 	cin >> tempmaxhours;
